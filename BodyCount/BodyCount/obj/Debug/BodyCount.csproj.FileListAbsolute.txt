@@ -1,0 +1,13 @@
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\bin\Debug\BodyCount.exe.config
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\bin\Debug\BodyCount.exe
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\bin\Debug\BodyCount.pdb
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyCount.csprojResolveAssemblyReference.cache
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\MainWindow.baml
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\MainWindow.g.cs
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\App.g.cs
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyCount_MarkupCompile.cache
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyCount.g.resources
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyCount.Properties.Resources.resources
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyCount.csproj.GenerateResource.Cache
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyCount.exe
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyCount.pdb
