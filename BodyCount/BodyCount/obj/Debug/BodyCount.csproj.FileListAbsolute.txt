@@ -12,3 +12,5 @@ C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Deb
 C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyCount.exe
 C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyCount.pdb
 C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyCount_MarkupCompile.lref
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyIDAndPostion.baml
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyIDAndPostion.g.cs

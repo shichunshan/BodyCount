@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Kinect;
 
 namespace BodyCount
 {
@@ -42,12 +43,47 @@ namespace BodyCount
             }
         }
 
+        private int shotCount;
+
+        public int ShotCount
+        {
+            get { return shotCount; }
+            set { shotCount = value; }
+        }
+        
         public TrackingTime()
         {
             index = 0;
             trackingID = 0;
             time = 0;
+            staytime = 0;
+            currentskeletonpoint=new SkeletonPoint();
+            shotCount = 0;
         }
+        private int staytime;
+
+        public int StayTime
+        {
+            get { return staytime; }
+            set
+            {
+                staytime = value;
+                 OnPropertyChanged("StayTime");
+            }
+        }
+
+        private SkeletonPoint currentskeletonpoint;
+
+        public SkeletonPoint  CurrentSkeletonPoint
+        {
+            get { return currentskeletonpoint; }
+            set
+            {
+                currentskeletonpoint = value;
+                OnPropertyChanged("CurrentSkeletonPoint");
+            }
+        }
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string info)
