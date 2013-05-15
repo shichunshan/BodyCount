@@ -25,7 +25,7 @@ namespace BodyCount.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Dev01\\Desktop\\SaveImage")]
         public string SaveLocation {
             get {
                 return ((string)(this["SaveLocation"]));

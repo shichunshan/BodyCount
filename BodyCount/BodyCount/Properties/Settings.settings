@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="SaveLocation" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">C:\Users\Dev01\Desktop\SaveImage</Value>
     </Setting>
     <Setting Name="SaveFormate" Type="System.String" Scope="User">
       <Value Profile="(Default)">png</Value>

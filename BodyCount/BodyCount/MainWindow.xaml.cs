@@ -15,8 +15,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 using BodyCount.Properties;
+using FaceppSDK;
 using Microsoft.Kinect;
+using System.ComponentModel;
 
 namespace BodyCount
 {
@@ -38,6 +41,8 @@ namespace BodyCount
         private bool isStay = false;
         private string _fn;
         private readonly int croppedImageWidth;
+        private BackgroundWorker backgroundWorker;
+        public FaceService fs = new FaceService("2affcadaeddd18f422375adc869f3991", "EsU9hmgweuz8U-nwv6s4JP-9AJt64vhz");
 
         public MainWindow()
         {
@@ -46,6 +51,7 @@ namespace BodyCount
             Closing += MainWindow_Closing;
             this.listBox.ItemsSource = trackingTimeList;
             croppedImageWidth = 200;
+            
         }
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -69,6 +75,16 @@ namespace BodyCount
             int32Rect = new Int32Rect(0, 0, kinectSensor.ColorStream.FrameWidth,kinectSensor.ColorStream.FrameHeight);
             this.colorImage.Source = writeableBitmap;
             kinectSensor.Start();
+            //detect faces on background
+            backgroundWorker=new BackgroundWorker();
+            backgroundWorker.DoWork += backgroundWorker_DoWork;
+           // backgroundWorker.RunWorkerAsync();
+
+        }
+
+        void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            detectFace((string) e.Argument);
         }
 
         
@@ -96,24 +112,9 @@ namespace BodyCount
             {
                 if (skeletonFrame != null)
                 {
-                    
                     skeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
                     skeletonFrame.CopySkeletonDataTo(skeletons);
-
-
-                    //Kinect only get the position
-                    int noTrac = (from s in skeletons
-                                  where s.TrackingState == SkeletonTrackingState.PositionOnly
-                                  select s).Count();
-                    
-                    //kinect tracked
-                    int getTrac = (from s in skeletons
-                                   where s.TrackingState == SkeletonTrackingState.Tracked
-                                   select s).Count();
-
-                    int numberOfSkeletons = noTrac + getTrac;
-                    //output the number in textbox
-                    //Debug.WriteLine("Begin:");
+                   
                     foreach (var skeleton in skeletons)
                     {
                         currentTrackingIDList.Add(skeleton.TrackingId);
@@ -130,10 +131,7 @@ namespace BodyCount
                                 trackingTimeTemp.Index = trackingTimeIndex++;
                                 trackingTimeList.Add(trackingTimeTemp);
                                 listBox.SelectedItem = listBox.Items[listBox.Items.Count - 1];
-                               
                             }
-                          
-
                             UpdateTrackingTime(skeleton);
                         }
                         //update bodyID and time
@@ -214,29 +212,7 @@ namespace BodyCount
             }
         }
 
-        private void UpdateTrackingTime(List<int> currentTrackingIDList)
-        {
-            if (currentTrackingIDList!=null)
-            {
-                foreach (var currentID in currentTrackingIDList)
-                {
-                    for (int i = trackingTimeList.Count-1; i >=0; i--)
-                    {
-                        if (currentID == trackingTimeList[i].TrackingID)
-                        {
-                            TrackingTime trackingTime = new TrackingTime();
-                            trackingTime.Time = trackingTimeList[i].Time + 1;
-                            trackingTime.TrackingID = trackingTimeList[i].TrackingID;
-                            trackingTime.Index = trackingTimeList[i].Index;
-                            
-                            trackingTimeList.RemoveAt(i);
-                            trackingTimeList.Add(trackingTime);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+       
         private void SaveImage(ColorImagePoint position,int trackingID)
         {
             _fn = GetNextFilename(trackingID);
@@ -260,7 +236,7 @@ namespace BodyCount
                 {
                     encoder.Save(stm);
                 }
-               
+               backgroundWorker.RunWorkerAsync(_fn);
             }
             catch (Exception x)
             {
@@ -282,6 +258,81 @@ namespace BodyCount
                 fn = System.IO.Path.Combine(s.SaveLocation, s.SaveBasename + trackingID +"_"+num.ToString()+ "." + s.SaveFormate);
             }
             return fn;
+        }
+
+        private void detectFace(string path)
+        {
+            DetectResult detect = new DetectResult();
+            DetectResult res = fs.Detection_DetectImg(path);
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
+            bi.EndInit();
+            WriteableBitmap wb = new WriteableBitmap(bi);
+
+            List<Face> faceList = new List<Face>();
+            for (int i = 0; i < res.face.Count; i++)
+            {
+                faceList.Add(res.face[i]);
+                Int32Rect rect = new Int32Rect(maxInt((Int32)(res.face[i].center.x * wb.Width / 100.0 - res.face[i].width * wb.Width / 200.0), 0),
+                                            maxInt((int)(res.face[i].center.y * wb.Height / 100.0 - res.face[i].height * wb.Height / 200.0), 0),
+                                             (int)(res.face[i].width * wb.Width / 100.0), (int)((res.face[i].height * wb.Height) / 100.0));
+                byte[] ColorData = { 0, 0, 255, 100 }; // B G R
+                for (int j = 0; j < rect.Width; j++)
+                {
+                    Int32Rect rect1 = new Int32Rect(
+                       j + rect.X,
+                       rect.Y,
+                       1,
+                       1);
+
+                    wb.WritePixels(rect1, ColorData, 4, 0);
+                    Int32Rect rect2 = new Int32Rect(
+                       j + rect.X,
+                       rect.Y + rect.Height,
+                       1,
+                       1);
+
+                    wb.WritePixels(rect2, ColorData, 4, 0);
+                }
+                for (int j = 0; j < rect.Height; j++)
+                {
+                    Int32Rect rect1 = new Int32Rect(
+                       rect.X,
+                        j + rect.Y,
+                       1,
+                       1);
+
+                    wb.WritePixels(rect1, ColorData, 4, 0);
+                    Int32Rect rect2 = new Int32Rect(
+                        rect.X + rect.Width,
+                       j + rect.Y,
+                       1,
+                       1);
+
+                    wb.WritePixels(rect2, ColorData, 4, 0);
+                }
+
+
+            }
+            var pngE1 = new PngBitmapEncoder();
+            pngE1.Frames.Add(BitmapFrame.Create(wb));
+            using (Stream stream = File.Create(path + ".jpg"))
+            {
+                pngE1.Save(stream);
+            }
+            // Insert code to set properties and fields of the object.
+            XmlSerializer mySerializer = new XmlSerializer(typeof(List<Face>));
+            // To write to a file, create a StreamWriter object.
+            
+            StreamWriter myWriter = new StreamWriter("detectResult.xml", true);
+            mySerializer.Serialize(myWriter, faceList);
+            myWriter.Close();
+        }
+
+        private int maxInt(int x, int y)
+        {
+            return (x > y) ? x : y;
         }
        
     }
