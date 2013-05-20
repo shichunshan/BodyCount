@@ -50,7 +50,7 @@ namespace BodyCount
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
             this.listBox.ItemsSource = trackingTimeList;
-            croppedImageWidth = 200;
+            croppedImageWidth = 300;
             
         }
 
@@ -226,6 +226,8 @@ namespace BodyCount
                 {
                     x = 0;
                 }
+
+                
                 CroppedBitmap croppedBitmap = new CroppedBitmap(renderTargetBitmap, new Int32Rect(x,0,croppedImageWidth,(int)renderTargetBitmap.Height));
                 string ext = System.IO.Path.GetExtension(_fn).ToLower();
                 BitmapEncoder encoder = new PngBitmapEncoder();

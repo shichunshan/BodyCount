@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dll/log4net.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("detectresult.xml")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dll/faceppsdk.dll")]
 
 
