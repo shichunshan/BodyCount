@@ -8,8 +8,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dll/directshowlib-2005.dll")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dll/log4net.dll")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("detectresult.xml")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dll/faceppsdk.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dll/microsoft.windowsapicodepack.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dll/microsoft.windowsapicodepack.shell.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dll/wpfmediakit.dll")]
 
 

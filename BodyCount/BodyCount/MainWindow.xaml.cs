@@ -20,6 +20,8 @@ using BodyCount.Properties;
 using FaceppSDK;
 using Microsoft.Kinect;
 using System.ComponentModel;
+using WPFMediaKit;
+using WPFMediaKit.DirectShow.Controls;
 
 namespace BodyCount
 {
@@ -43,6 +45,7 @@ namespace BodyCount
         private readonly int croppedImageWidth;
         private BackgroundWorker backgroundWorker;
         public FaceService fs = new FaceService("2affcadaeddd18f422375adc869f3991", "EsU9hmgweuz8U-nwv6s4JP-9AJt64vhz");
+        private string[] inputNames = MultimediaUtil.VideoInputNames;    
 
         public MainWindow()
         {
@@ -51,7 +54,7 @@ namespace BodyCount
             Closing += MainWindow_Closing;
             this.listBox.ItemsSource = trackingTimeList;
             croppedImageWidth = 300;
-            
+            videoElement.VideoCaptureSource = inputNames[0];
         }
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -126,6 +129,7 @@ namespace BodyCount
                             {
                                 BodyCount++;
                                 TrackingTime trackingTimeTemp=new TrackingTime();
+                                trackingTimeTemp.StartTime = DateTime.Now;
                                 trackingTimeTemp.TrackingID = skeleton.TrackingId;
                                 trackingTimeTemp.Time = 0;
                                 trackingTimeTemp.Index = trackingTimeIndex++;
@@ -134,16 +138,33 @@ namespace BodyCount
                             }
                             UpdateTrackingTime(skeleton);
                         }
-                        //update bodyID and time
-                       
                     }
-                   // UpdateTrackingTime(currentTrackingIDList);
+
+                    foreach (var bodytrackingID in oldTrackingIdList )
+                    {
+                        if (!currentTrackingIDList.Contains(bodytrackingID))
+                        {
+                            for (int i = trackingTimeList.Count - 1; i >= 0; i--)
+                            {
+                                if (bodytrackingID==trackingTimeList[i].TrackingID)
+                                {
+                                    TrackingTime trackingTime = trackingTimeList[i];
+                                    trackingTime.EndTime = DateTime.Now;
+                                    trackingTime.DewellTime = (trackingTime.EndTime - trackingTime.StartTime).TotalSeconds;
+                                    trackingTimeList.RemoveAt(i);
+                                    trackingTimeList.Add(trackingTime);
+                                }
+                            }
+                        }    
+                    }
+                    //update oldTrackingIDList
                     oldTrackingIdList.Clear();
                     foreach (var trackID in currentTrackingIDList)
                     {
                        oldTrackingIdList.Add(trackID);
                     }
                     this.textBox1.Text = BodyCount.ToString();
+                    
                 }
 
             } 
@@ -162,12 +183,14 @@ namespace BodyCount
                 if (skeleton.TrackingId == trackingTimeList[i].TrackingID)
                 {
                     TrackingTime trackingTime = new TrackingTime();
+                    trackingTime.StartTime = trackingTimeList[i].StartTime;
                     trackingTime.Time = trackingTimeList[i].Time + 1;
                     trackingTime.TrackingID = trackingTimeList[i].TrackingID;
                     trackingTime.Index = trackingTimeList[i].Index;
                     trackingTime.StayTime = trackingTimeList[i].StayTime;
                     trackingTime.CurrentSkeletonPoint = trackingTimeList[i].CurrentSkeletonPoint;
                     trackingTime.ShotCount = trackingTimeList[i].ShotCount;
+                    trackingTime.TotalStayTime = trackingTimeList[i].TotalStayTime + 1;
                     float x = skeleton.Position.X - trackingTimeList[i].CurrentSkeletonPoint.X;
                     float y = skeleton.Position.Y - trackingTimeList[i].CurrentSkeletonPoint.Y;
                     float z = skeleton.Position.Z - trackingTimeList[i].CurrentSkeletonPoint.Z;
@@ -195,9 +218,9 @@ namespace BodyCount
                     if (trackingTimeList[i].StayTime>=50)
                     {
                         trackingTime.StayTime = 0;
-                        if (trackingTimeList[i].ShotCount==0)
+                        if (trackingTimeList[i].ShotCount<=0)
                         {
-                            SaveImage(position, trackingTimeList[i].TrackingID);
+                            SaveImage(position, trackingTimeList[i]);
                             trackingTime.ShotCount = trackingTimeList[i].ShotCount+1;
                         }
                     }
@@ -213,22 +236,25 @@ namespace BodyCount
         }
 
        
-        private void SaveImage(ColorImagePoint position,int trackingID)
+        private void SaveImage(ColorImagePoint position,TrackingTime trackingTime)
         {
-            _fn = GetNextFilename(trackingID);
+            _fn = GetFilename(trackingTime);
             try
             {
                RenderTargetBitmap renderTargetBitmap=new RenderTargetBitmap(640,480,96,96,PixelFormats.Pbgra32);
-                renderTargetBitmap.Render(colorImage);
+                renderTargetBitmap.Render(imageCanvas);
                 renderTargetBitmap.Freeze();
                 int x = position.X - croppedImageWidth/2;
                 if (x<0)
                 {
                     x = 0;
                 }
-
-                
-                CroppedBitmap croppedBitmap = new CroppedBitmap(renderTargetBitmap, new Int32Rect(x,0,croppedImageWidth,(int)renderTargetBitmap.Height));
+                int width = croppedImageWidth;
+                if (x+width>renderTargetBitmap.Width)
+                {
+                    width = (int)renderTargetBitmap.Width - x;
+                }
+                CroppedBitmap croppedBitmap = new CroppedBitmap(renderTargetBitmap, new Int32Rect(x,0,width,(int)renderTargetBitmap.Height));
                 string ext = System.IO.Path.GetExtension(_fn).ToLower();
                 BitmapEncoder encoder = new PngBitmapEncoder();
                 if (encoder == null) return;
@@ -247,6 +273,25 @@ namespace BodyCount
                 // timer.Stop();
             }
 
+        }
+
+        private string GetFilename(TrackingTime trackingTime)
+        {
+            int num = 0;
+            Settings s = Settings.Default;
+            string fn = System.IO.Path.Combine(s.SaveLocation,
+                                               trackingTime.StartTime.ToString("yyyyMMddHHmmss") + "_" + trackingTime.TrackingID + "_" +
+                                               trackingTime.TotalStayTime +"_"+num.ToString()+
+                                               ".png");
+            while (File.Exists(fn))
+            {
+                num++;
+                fn = System.IO.Path.Combine(s.SaveLocation,
+                                               trackingTime.StartTime.ToString("yyyyMMddHHmmss") + "_" + trackingTime.TrackingID + "_" +
+                                               trackingTime.TotalStayTime + "_" + num.ToString() +
+                                               ".png");
+            }
+            return fn;
         }
         private string GetNextFilename(int trackingID)
         {

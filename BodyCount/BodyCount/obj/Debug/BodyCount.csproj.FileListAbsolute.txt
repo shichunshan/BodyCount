@@ -18,3 +18,7 @@ C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Deb
 C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyCount.exe
 C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyCount.pdb
 C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\obj\Debug\BodyCount.csprojResolveAssemblyReference.cache
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\bin\Debug\DirectShowLib-2005.dll
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\bin\Debug\WPFMediaKit.dll
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\bin\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Users\Dev01\Documents\Project\BodyCount\BodyCount\BodyCount\BodyCount\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll

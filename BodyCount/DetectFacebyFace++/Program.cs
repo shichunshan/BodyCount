@@ -23,14 +23,10 @@ namespace DetectFacebyFace__
 
         static void Main(string[] args)
         {
-            Init();
-            Timer timer = new Timer(10000);
-            timer.Elapsed += timer_Elapsed;
-
-            timer.AutoReset = true;
-            timer.Enabled = true;
+            DateTime now = DateTime.Now;
             
-            timer.Start();
+            string stringnow = now.ToString();
+            //Console.WriteLine(Convert.ToDateTime(stringnow, String.));
             Console.ReadKey();
             // timer.Stop();
         }

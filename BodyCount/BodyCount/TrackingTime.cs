@@ -10,6 +10,31 @@ namespace BodyCount
 {
     public class TrackingTime:INotifyPropertyChanged
     {
+        private DateTime startTime;
+
+        public DateTime StartTime
+        {
+            get { return startTime; }
+            set
+            {
+                startTime = value;
+                OnPropertyChanged("StartTime");
+            }
+        }
+
+        private DateTime endTime;
+        public DateTime EndTime
+        {
+            get
+            {
+                return endTime;
+            }
+            set {
+                endTime = value;
+                OnPropertyChanged("EndTime");
+            }
+        }   
+
         private int index;
             
         public int Index
@@ -32,16 +57,25 @@ namespace BodyCount
                 OnPropertyChanged("TrackingID");
             }
         }
-        private Int32 time;
+        private float time;
 
-        public Int32 Time
+        public float Time
         {
-            get { return time; }
+            get { return (float)totalStayTime/30; }
             set {
                 time = value;
                 OnPropertyChanged("Time");
             }
         }
+
+        private double  dewelltime;
+
+        public double  DewellTime
+        {
+            get { return dewelltime; }
+            set { dewelltime = value; }
+        }
+        
 
         private int shotCount;
 
@@ -59,6 +93,7 @@ namespace BodyCount
             staytime = 0;
             currentskeletonpoint=new SkeletonPoint();
             shotCount = 0;
+            dewelltime = 0;
         }
         private int staytime;
 
@@ -71,6 +106,19 @@ namespace BodyCount
                  OnPropertyChanged("StayTime");
             }
         }
+
+        private int totalStayTime;
+
+        public int TotalStayTime
+        {
+            get { return totalStayTime; }
+            set
+            {
+                totalStayTime = value;
+                OnPropertyChanged("TotalStayTime");
+            }
+        }
+        
 
         private SkeletonPoint currentskeletonpoint;
 

@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BodyCount", "BodyCount\Body
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DetectFacebyFace++", "DetectFacebyFace++\DetectFacebyFace++.csproj", "{160F90EB-6DC9-41F3-AF7A-32C5D379AD14}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Face++", "Face++\Face++.csproj", "{4982282E-F391-4C67-900A-69BBF51CD5C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{160F90EB-6DC9-41F3-AF7A-32C5D379AD14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{160F90EB-6DC9-41F3-AF7A-32C5D379AD14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{160F90EB-6DC9-41F3-AF7A-32C5D379AD14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4982282E-F391-4C67-900A-69BBF51CD5C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4982282E-F391-4C67-900A-69BBF51CD5C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4982282E-F391-4C67-900A-69BBF51CD5C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4982282E-F391-4C67-900A-69BBF51CD5C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
