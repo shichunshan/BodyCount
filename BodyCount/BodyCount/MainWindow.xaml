@@ -3,16 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
         xmlns:local="clr-namespace:BodyCount"
         xmlns:controls="clr-namespace:WPFMediaKit.DirectShow.Controls;assembly=WPFMediaKit"
-        Title="MainWindow" Height="760" Width="1080">
+        Title="MainWindow" Height="1000" Width="1080">
     <Window.Resources>
         <!--<ObjectDataProvider x:Key="myDemos" ObjectType="{x:Type local:MainWindow}"  MethodName="GetList"/>-->
        
     </Window.Resources>
     <Grid>
-        <TextBox Visibility="Visible" Name="textBox1" FontSize="72" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="292,66,0,0" Width="170"></TextBox>
+        <TextBox Visibility="Visible" Name="textBox1" FontSize="72" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="824,87.233,0,0" Width="170"></TextBox>
         
         
-        <ListBox x:Name="listBox" Margin="780,114,0,0"  Width="238" >
+        <ListBox x:Name="listBox" Margin="824,194,10,0"  Width="238" >
             <ListBox.ItemTemplate>
             <DataTemplate >
                 <Border Name="border" BorderBrush="Aqua" BorderThickness="1" Padding="5" Margin="5">
@@ -45,16 +45,19 @@
             </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Border Height="480" Width="1280" Margin="75,198,357,52" >
-            <Canvas x:Name="imageCanvas">
-                <Image  x:Name="colorImage" Height="480" Width="640" Canvas.Left="640" ></Image>
+		 <Image  x:Name="colorImage" Height="480" Width="640" Canvas.Left="10" Canvas.Top="-312" Margin="75,10,357,480"  ></Image>
+        <Border Height="480" Width="640" Margin="75,480,357,10" >
+            <Canvas x:Name="imageCanvas">  
+				<Canvas>             
                 <controls:VideoCaptureElement x:Name="videoElement" FPS="30" DesiredPixelWidth="1080" DesiredPixelHeight="720"
-                                              Height="480" Width="640" LoadedBehavior="Play" Stretch="Uniform" ></controls:VideoCaptureElement>
+                                              Height="480" Width="640" LoadedBehavior="Play" Stretch="Uniform" ></controls:VideoCaptureElement>               
             </Canvas>
+			  <Canvas x:Name="bodyContainer" Width="640" Height="480" > </Canvas>
+			  </Canvas>
         </Border>
        
-        <Canvas x:Name="bodyContainer" Width="640" Height="480" Margin="75,198,357,52" >
+      
             
-        </Canvas>
+       
     </Grid>
 </Window>

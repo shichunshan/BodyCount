@@ -51,31 +51,28 @@
                                     <RowDefinition></RowDefinition>
                                     <RowDefinition></RowDefinition>
                                     <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
+                                    
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="80" />
                                     <ColumnDefinition Width="100" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock HorizontalAlignment="Right" Grid.Row="0" Grid.Column="0" Text="TrackingID:" />
-                                <TextBlock HorizontalAlignment="Right" Grid.Row="1" Grid.Column="0" Text="Time:" />
-                                <TextBlock HorizontalAlignment="Right" Grid.Row="2" Grid.Column="0" Text="Age:"></TextBlock>
-                                <TextBlock HorizontalAlignment="Right" Grid.Row="3" Grid.Column="0" Text="Age Range:"></TextBlock>
-                                <TextBlock HorizontalAlignment="Right" Grid.Row="4" Grid.Column="0" Text="Gender:"></TextBlock>
-                                <TextBlock HorizontalAlignment="Right" Grid.Row="5" Grid.Column="0" Text="Confidence:"></TextBlock>
-                                <TextBlock HorizontalAlignment="Right" Grid.Row="6" Grid.Column="0" Text="Race:"></TextBlock>
-                                <TextBlock HorizontalAlignment="Right" Grid.Row="7" Grid.Column="0" Text="Stay Time:"></TextBlock>
+                               
+                                <TextBlock HorizontalAlignment="Right" Grid.Row="0" Grid.Column="0" Text="Age:"></TextBlock>
+                                <TextBlock HorizontalAlignment="Right" Grid.Row="1" Grid.Column="0" Text="Age Range:"></TextBlock>
+                                <TextBlock HorizontalAlignment="Right" Grid.Row="2" Grid.Column="0" Text="Gender:"></TextBlock>
+                                <TextBlock HorizontalAlignment="Right" Grid.Row="3" Grid.Column="0" Text="Gender Confidence:"></TextBlock>
+                                <TextBlock HorizontalAlignment="Right" Grid.Row="4" Grid.Column="0" Text="Race:"></TextBlock>
+                                <TextBlock HorizontalAlignment="Right" Grid.Row="5" Grid.Column="0" Text="Race Confidence:"></TextBlock>
+                               
 
-                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=TrackingID}" />
-                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=Time}" />
-                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=FaceAttribute.age.value}" />
-                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Path=FaceAttribute.age.range}" />
-                                <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Path=FaceAttribute.gender.value}" />
-                                <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Path=FaceAttribute.gender.confidence}" />
-                                <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Path=FaceAttribute.race.value}" />
-                                <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding Path=TotalStayTime}"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=Age}" />
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=AgeRange}" />
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=Gender}" />
+                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Path=GenderConfidence}" />
+                                <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Path=Race}" />
+                                <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Path=RaceConfidence}" />
+                              
                                 
                             </Grid>
                         </Grid>

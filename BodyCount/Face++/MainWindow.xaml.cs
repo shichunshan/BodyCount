@@ -20,6 +20,7 @@ using Face__.Properties;
 using FaceppSDK;
 using System.ComponentModel;
 using System.Timers;
+using Raven.Client.Document;
 
 namespace Face__
 {
@@ -28,14 +29,15 @@ namespace Face__
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<BitmapSource> saveImages=new ObservableCollection<BitmapSource>();
-        public ObservableCollection<DetectFaceInfo> DetectFaceInfos = new ObservableCollection<DetectFaceInfo>(); 
-        private  FaceService faceService ;
+        public ObservableCollection<BitmapSource> saveImages = new ObservableCollection<BitmapSource>();
+        public ObservableCollection<DetectFaceInfo> DetectFaceInfos = new ObservableCollection<DetectFaceInfo>();
+        private FaceService faceService;
         private Settings settings = Settings.Default;
         private string savePath;
         private string detectPath;
         private BackgroundWorker backgroundWorker;
-        private List<string> fileNames=new List<string>( );
+        private List<string> fileNames = new List<string>();
+        private DocumentStore DocumentStore;
 
         public MainWindow()
         {
@@ -43,52 +45,84 @@ namespace Face__
             faceService = new FaceService("2affcadaeddd18f422375adc869f3991", "EsU9hmgweuz8U-nwv6s4JP-9AJt64vhz");
             savePath = settings.SaveLocation;
             detectPath = settings.DetectLocation;
-          
+
             Loaded += MainWindow_Loaded;
             this.saveImagesElement.ItemsSource = saveImages;
             this.detectResultElement.ItemsSource = DetectFaceInfos;
+            DocumentStore = new DocumentStore {Url = "http://localhost:8080/"};
         }
 
-        void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             DispatcherTimer dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Interval = new TimeSpan(0,0,0,2);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 2);
             dispatcherTimer.Tick += dispatcherTimer_Tick;
             dispatcherTimer.Start();
-            
+            DocumentStore.Initialize();
         }
 
-        void dispatcherTimer_Tick(object sender, EventArgs e)
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             fileNames = ReadFilePath(savePath);
             LoadImages(fileNames);
             DetectImages(fileNames);
         }
 
-        
-        private void DetectImages(List<string> fileNames )
+
+        private void DetectImages(List<string> fileNames)
         {
             foreach (var fileName in fileNames)
             {
                 DetectResult detectResult = new DetectResult();
                 detectResult = faceService.Detection_DetectImg(savePath + "\\" + fileName);
+
                 DetectFaceInfo detectFaceInfo = new DetectFaceInfo(detectResult, fileName);
                 DetectFaceInfos.Add(detectFaceInfo);
                 MoveFile(savePath + "\\" + fileName);
-               
+                SaveDataToDB(detectResult, fileName);
             }
         }
 
-        private  void MoveFile(string filepath)
+        private void SaveDataToDB(DetectResult detectResult, string fileName)
+        {
+            using (var session = DocumentStore.OpenSession())
+            {
+                string[] st = fileName.Split('_');
+                DetectFaceInfo detectFaceInfo = session.Load<DetectFaceInfo>(st[0]);
+                if (detectFaceInfo != null)
+                {
+                    if (detectFaceInfo.Race == null)
+                    {
+                        if (detectResult.face.Count > 0)
+                        {
+                            Face face = detectResult.face.SingleOrDefault();
+                            detectFaceInfo.Age = face.attribute.age.value;
+                            detectFaceInfo.AgeRange = face.attribute.age.range;
+
+                            detectFaceInfo.Gender = face.attribute.gender.value;
+                            detectFaceInfo.GenderConfidence = face.attribute.gender.confidence;
+
+                            detectFaceInfo.Race = face.attribute.race.value;
+                            detectFaceInfo.RaceConfidence = face.attribute.race.confidence;
+                        }
+                    }
+                    session.Store(detectFaceInfo);
+                    session.SaveChanges();
+                }
+            }
+        }
+
+        private void MoveFile(string filepath)
         {
             try
             {
                 FileInfo file = new FileInfo(filepath);
-                file.MoveTo(detectPath + file.Name);
+                file.MoveTo(detectPath + "//" + file.Name);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                Debug.WriteLine(ex.ToString());
+                // MessageBox.Show(ex.ToString());
             }
         }
 
@@ -100,15 +134,15 @@ namespace Face__
 
                 FileInfo fileInfo = new FileInfo(savePath + "\\" + filePath);
 
-                byte[] bytes = binReader.ReadBytes((int)fileInfo.Length);
+                byte[] bytes = binReader.ReadBytes((int) fileInfo.Length);
 
                 binReader.Close();
 
                 BitmapImage bitmap = new BitmapImage();
                 bitmap.BeginInit();
-       
+
                 bitmap.StreamSource = new MemoryStream(bytes);
-                bitmap.EndInit();  
+                bitmap.EndInit();
 
                 saveImages.Add(bitmap);
             }

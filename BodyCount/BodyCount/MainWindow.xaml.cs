@@ -22,6 +22,9 @@ using Microsoft.Kinect;
 using System.ComponentModel;
 using WPFMediaKit;
 using WPFMediaKit.DirectShow.Controls;
+using Raven.Client.Document;
+using Face__;
+using Point = System.Windows.Point;
 
 namespace BodyCount
 {
@@ -45,7 +48,9 @@ namespace BodyCount
         private readonly int croppedImageWidth;
         private BackgroundWorker backgroundWorker;
         public FaceService fs = new FaceService("2affcadaeddd18f422375adc869f3991", "EsU9hmgweuz8U-nwv6s4JP-9AJt64vhz");
-        private string[] inputNames = MultimediaUtil.VideoInputNames;    
+        private string[] inputNames = MultimediaUtil.VideoInputNames;
+        private DocumentStore documentStore;
+        private DateTime CentryBegin=new DateTime(2001,1,1);
 
         public MainWindow()
         {
@@ -55,6 +60,7 @@ namespace BodyCount
             this.listBox.ItemsSource = trackingTimeList;
             croppedImageWidth = 300;
             videoElement.VideoCaptureSource = inputNames[0];
+            documentStore = new DocumentStore{Url =  "http://localhost:8080/"};
         }
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -73,16 +79,18 @@ namespace BodyCount
             kinectSensor.SkeletonFrameReady += kinectSensor_SkeletonFrameReady;
             kinectSensor.ColorStream.Enable();
             kinectSensor.ColorFrameReady +=kinectSensor_ColorFrameReady;
-            this.writeableBitmap = new WriteableBitmap(kinectSensor.ColorStream.FrameWidth, kinectSensor.ColorStream.FrameHeight, 96, 96, PixelFormats.Bgr32, null);
             stride = kinectSensor.ColorStream.FrameWidth * kinectSensor.ColorStream.FrameBytesPerPixel;
-            int32Rect = new Int32Rect(0, 0, kinectSensor.ColorStream.FrameWidth,kinectSensor.ColorStream.FrameHeight);
-            this.colorImage.Source = writeableBitmap;
+            int32Rect = new Int32Rect(0, 0, kinectSensor.ColorStream.FrameWidth, kinectSensor.ColorStream.FrameHeight);
             kinectSensor.Start();
+
+            this.writeableBitmap = new WriteableBitmap(kinectSensor.ColorStream.FrameWidth, kinectSensor.ColorStream.FrameHeight, 96, 96, PixelFormats.Bgr32, null);
+            this.colorImage.Source = writeableBitmap;
+           
             //detect faces on background
             backgroundWorker=new BackgroundWorker();
             backgroundWorker.DoWork += backgroundWorker_DoWork;
            // backgroundWorker.RunWorkerAsync();
-
+            documentStore.Initialize();
         }
 
         void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -125,6 +133,7 @@ namespace BodyCount
                         if (skeleton.TrackingState==SkeletonTrackingState.PositionOnly||
                             skeleton.TrackingState == SkeletonTrackingState.Tracked)
                         {
+                            //new body
                             if (!oldTrackingIdList.Contains(skeleton.TrackingId))
                             {
                                 BodyCount++;
@@ -135,11 +144,13 @@ namespace BodyCount
                                 trackingTimeTemp.Index = trackingTimeIndex++;
                                 trackingTimeList.Add(trackingTimeTemp);
                                 listBox.SelectedItem = listBox.Items[listBox.Items.Count - 1];
+                                CreateBodyDateToDB(trackingTimeTemp.StartTime);
                             }
+                            //update body data
                             UpdateTrackingTime(skeleton);
                         }
                     }
-
+                    // body disappear
                     foreach (var bodytrackingID in oldTrackingIdList )
                     {
                         if (!currentTrackingIDList.Contains(bodytrackingID))
@@ -153,6 +164,7 @@ namespace BodyCount
                                     trackingTime.DewellTime = (trackingTime.EndTime - trackingTime.StartTime).TotalSeconds;
                                     trackingTimeList.RemoveAt(i);
                                     trackingTimeList.Add(trackingTime);
+                                    UpdateDataToDB(trackingTime);
                                 }
                             }
                         }    
@@ -169,6 +181,51 @@ namespace BodyCount
 
             } 
 
+        }
+
+        private void CreateBodyDateToDB(DateTime startTime)
+        {
+            using (var session = documentStore.OpenSession())
+            {
+                DetectFaceInfo detectFaceInfo = new DetectFaceInfo();
+                string id = GetDetectFaceInfoID(startTime);
+                session.Store(detectFaceInfo, id);
+                session.SaveChanges();
+            }
+            
+        }
+
+        private void UpdateDataToDB(TrackingTime trackingTime)
+        {
+           
+            using (var session = documentStore.OpenSession())
+            {
+                string id = GetDetectFaceInfoID(trackingTime.StartTime);
+                DetectFaceInfo detectFaceInfo = session.Load<DetectFaceInfo>(id);
+            
+                detectFaceInfo.StartTime = trackingTime.StartTime;
+                detectFaceInfo.EndTime = trackingTime.EndTime;
+                detectFaceInfo.DwellTime =new TimeSpan(0,0,0,(int)trackingTime.DewellTime);
+                detectFaceInfo.TotalStayTime=
+                        new TimeSpan(0, 0, 0, trackingTime.TotalStayTime/30);
+                Point point=new Point();
+                point.X = (int)(trackingTime.CurrentSkeletonPoint.X*(-1000));
+                point.Y=(int)(trackingTime.CurrentSkeletonPoint.Z*1000);
+                detectFaceInfo.BodyPostion = point;
+
+                
+               
+                session.SaveChanges();
+            }
+        }
+
+        private string GetDetectFaceInfoID(DateTime startTime)
+        {
+            string id;
+           
+            id = startTime.ToString("yyyyMMddHHmmssfff");
+           // id = id + trackingTime.Index.ToString();
+            return id;
         }
 
         private void UpdateTrackingTime(Skeleton skeleton)
@@ -220,7 +277,8 @@ namespace BodyCount
                         trackingTime.StayTime = 0;
                         if (trackingTimeList[i].ShotCount<=0)
                         {
-                            SaveImage(position, trackingTimeList[i]);
+                            SaveImage(position, trackingTimeList[i], videoElement);
+                            SaveImage(position, trackingTimeList[i], colorImage);
                             trackingTime.ShotCount = trackingTimeList[i].ShotCount+1;
                         }
                     }
@@ -236,13 +294,13 @@ namespace BodyCount
         }
 
        
-        private void SaveImage(ColorImagePoint position,TrackingTime trackingTime)
+        private void  SaveImage(ColorImagePoint position,TrackingTime trackingTime,FrameworkElement control)
         {
             _fn = GetFilename(trackingTime);
             try
             {
                RenderTargetBitmap renderTargetBitmap=new RenderTargetBitmap(640,480,96,96,PixelFormats.Pbgra32);
-                renderTargetBitmap.Render(imageCanvas);
+                renderTargetBitmap.Render(control);
                 renderTargetBitmap.Freeze();
                 int x = position.X - croppedImageWidth/2;
                 if (x<0)
@@ -264,7 +322,8 @@ namespace BodyCount
                 {
                     encoder.Save(stm);
                 }
-               backgroundWorker.RunWorkerAsync(_fn);
+                
+               //backgroundWorker.RunWorkerAsync(_fn);
             }
             catch (Exception x)
             {
@@ -279,33 +338,21 @@ namespace BodyCount
         {
             int num = 0;
             Settings s = Settings.Default;
+            string detectfaceid = GetDetectFaceInfoID(trackingTime.StartTime);
+           
             string fn = System.IO.Path.Combine(s.SaveLocation,
-                                               trackingTime.StartTime.ToString("yyyyMMddHHmmss") + "_" + trackingTime.TrackingID + "_" +
-                                               trackingTime.TotalStayTime +"_"+num.ToString()+
+                                             detectfaceid+"_"+num.ToString()+
                                                ".png");
             while (File.Exists(fn))
             {
                 num++;
                 fn = System.IO.Path.Combine(s.SaveLocation,
-                                               trackingTime.StartTime.ToString("yyyyMMddHHmmss") + "_" + trackingTime.TrackingID + "_" +
-                                               trackingTime.TotalStayTime + "_" + num.ToString() +
+                                             detectfaceid+ "_" + num.ToString() +
                                                ".png");
             }
             return fn;
         }
-        private string GetNextFilename(int trackingID)
-        {
-            int num = 0;
-            Settings s = Settings.Default;
-            string fn = System.IO.Path.Combine(s.SaveLocation, s.SaveBasename + trackingID +"_"+num.ToString()+ "." + s.SaveFormate);
-
-            while (File.Exists(fn))
-            {
-                num++;
-                fn = System.IO.Path.Combine(s.SaveLocation, s.SaveBasename + trackingID +"_"+num.ToString()+ "." + s.SaveFormate);
-            }
-            return fn;
-        }
+        
 
         private void detectFace(string path)
         {

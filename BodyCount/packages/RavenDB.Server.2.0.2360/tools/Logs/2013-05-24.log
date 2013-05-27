@@ -1,0 +1,2006 @@
+time,logger,level,database,message,exception
+2013-05-24 16:33:10.4362,Raven.Database.Impl.DocumentCacher,Info,<system>,"MemoryCache Settings:
+  PhysicalMemoryLimit = 99
+  CacheMemoryLimit    = 3205496832
+  PollingInterval     = 00:02:00",
+2013-05-24 16:33:10.5042,Raven.Storage.Esent.TransactionalStorage,Info,<system>,"Esent Settings:
+  MaxVerPages      = 16384
+  CacheSizeMax     = 262144
+  DatabasePageSize = 4096",
+2013-05-24 16:33:13.7944,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Backup/Status' was not found,
+2013-05-24 16:33:13.8684,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 0, for: ReducingExecuter, will wait for additional work",
+2013-05-24 16:33:13.8684,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 0, for: IndexingExecuter, will wait for additional work",
+2013-05-24 16:33:13.8754,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Authorization/WindowsSettings' was not found,
+2013-05-24 16:33:34.1745,Raven.Database.Server.Abstractions.HttpListenerContextAdpater,Error,,Failed to close response,"System.AggregateException: One or more errors occurred. ---> System.Net.HttpListenerException: An operation was attempted on a nonexistent network connection
+   at System.Net.HttpResponseStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at Raven.Database.Util.Streams.BufferPoolStream.Dispose(Boolean disposing) in c:\Builds\RavenDB-Stable\Raven.Database\Util\Streams\BufferPoolStream.cs:line 144
+   at System.IO.Stream.Close()
+   at Raven.Database.Impl.ExceptionAggregator.Execute(Action action) in c:\Builds\RavenDB-Stable\Raven.Database\Impl\ExceptionAggregator.cs:line 23
+   --- End of inner exception stack trace ---
+---> (Inner Exception #0) System.Net.HttpListenerException (0x80004005): An operation was attempted on a nonexistent network connection
+   at System.Net.HttpResponseStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at Raven.Database.Util.Streams.BufferPoolStream.Dispose(Boolean disposing) in c:\Builds\RavenDB-Stable\Raven.Database\Util\Streams\BufferPoolStream.cs:line 144
+   at System.IO.Stream.Close()
+   at Raven.Database.Impl.ExceptionAggregator.Execute(Action action) in c:\Builds\RavenDB-Stable\Raven.Database\Impl\ExceptionAggregator.cs:line 23<---
+"
+2013-05-24 16:33:34.1875,Raven.Database.Server.HttpServer,Debug,,Request #   1: GET     -   155 ms - <system>   - 200 - /changes/config?id=1/NSzdL&command=disconnect&noCache=1200006427,
+2013-05-24 16:33:36.3227,Raven.Database.Storage.IndexDefinitionStorage,Info,<system>,"New index Raven%2fDocumentsByEntityName:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByEntityName : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByEntityName()
+	{
+		this.ViewText = @""from doc in docs 
+let Tag = doc[""""@metadata""""][""""Raven-Entity-Name""""]
+select new { Tag, LastModified = (DateTime)doc[""""@metadata""""][""""Last-Modified""""] };"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let Tag = doc[""@metadata""][""Raven-Entity-Name""]
+			select new {
+				Tag,
+				LastModified = (DateTime)doc[""@metadata""][""Last-Modified""],
+				__document_id = doc.__document_id
+			});
+		this.AddField(""LastModified"");
+		this.AddField(""__document_id"");
+		this.AddField(""Tag"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+
+Compiled to:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByEntityName : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByEntityName()
+	{
+		this.ViewText = @""from doc in docs 
+let Tag = doc[""""@metadata""""][""""Raven-Entity-Name""""]
+select new { Tag, LastModified = (DateTime)doc[""""@metadata""""][""""Last-Modified""""] };"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let Tag = doc[""@metadata""][""Raven-Entity-Name""]
+			select new {
+				Tag,
+				LastModified = (DateTime)doc[""@metadata""][""Last-Modified""],
+				__document_id = doc.__document_id
+			});
+		this.AddField(""LastModified"");
+		this.AddField(""__document_id"");
+		this.AddField(""Tag"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+",
+2013-05-24 16:33:36.6277,Raven.Database.Indexing.IndexStorage,Debug,<system>,Creating index Raven/DocumentsByEntityName with encoded name Raven/DocumentsByEntityName,
+2013-05-24 16:33:36.8937,Raven.Database.Indexing.Index.Indexing,Debug,<system>,Creating index for Raven/DocumentsByEntityName,
+2013-05-24 16:33:36.9277,Raven.Database.Indexing.WorkContext,Debug,<system>,Incremented work counter to 1 because: PUT INDEX Raven/DocumentsByEntityName,
+2013-05-24 16:33:36.9417,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 1, for: ReducingExecuter, will wait for additional work",
+2013-05-24 16:33:36.9517,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 1, for: IndexingExecuter, will wait for additional work",
+2013-05-24 16:33:37.7727,Raven.Database.Server.HttpServer,Debug,,Request #   2: GET     -   110 ms - <system>   - 200 - /docs?pageSize=0&noCache=-1540486345,
+2013-05-24 16:33:37.8177,Raven.Database.Server.HttpServer,Debug,<system>,Request #   3: GET     -    22 ms - <system>   - 200 - /changes/events?id=1/AccXO,
+2013-05-24 16:33:37.8377,Raven.Database.Server.HttpServer,Debug,,Request #   4: GET     -    36 ms - <system>   - 200 - /license/status?noCache=186194670,
+2013-05-24 16:33:37.8377,Raven.Database.Server.HttpServer,Debug,,Request #   5: GET     -    38 ms - <system>   - 200 - /build/version?noCache=-1563309130,
+2013-05-24 16:33:37.8377,Raven.Database.Server.HttpServer,Debug,,Request #   6: GET     -    43 ms - <system>   - 200 - /databases?pageSize=1024&noCache=763144291,
+2013-05-24 16:33:37.8377,Raven.Database.Server.HttpServer,Debug,,Request #   7: GET     -     0 ms - <system>   - 200 - /changes/config?id=1/AccXO&command=watch-docs&noCache=-287419839,
+2013-05-24 16:33:37.8377,Raven.Database.Server.HttpServer,Debug,,Request #   8: GET     -     0 ms - <system>   - 200 - /changes/config?id=1/AccXO&command=watch-indexes&noCache=187855459,
+2013-05-24 16:33:37.8557,Raven.Database.Server.HttpServer,Debug,,Request #   9: GET     -     0 ms - <system>   - 200 - /changes/config?id=1/AccXO&command=watch-docs&noCache=-1259809541,
+2013-05-24 16:33:37.8888,Raven.Database.Server.HttpServer,Debug,,Request #  10: GET     -    89 ms - <system>   - 200 - /silverlight/ensureStartup?noCache=-1532116906,
+2013-05-24 16:33:37.9018,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/StudioConfig' was not found,
+2013-05-24 16:33:37.9018,Raven.Database.Server.HttpServer,Debug,,Request #  11: GET     -    13 ms - <system>   - 404 - /docs/Raven/StudioConfig?noCache=1605102344,
+2013-05-24 16:33:38.0288,Raven.Database.Server.HttpServer,Debug,,Request #  12: GET     -   228 ms - <system>   - 200 - /stats?noCache=-1436288512,
+2013-05-24 16:33:38.3528,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 16:33:38.3528,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/Columns/AllDocuments' was not found,
+2013-05-24 16:33:38.3528,Raven.Database.Server.HttpServer,Debug,,Request #  13: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-648872427,
+2013-05-24 16:33:38.3528,Raven.Database.Server.HttpServer,Debug,,Request #  14: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/Columns/AllDocuments?noCache=1279679639,
+2013-05-24 16:33:38.4018,Raven.Database.Server.HttpServer,Debug,,Request #  15: GET     -     1 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=551545270,
+2013-05-24 16:33:38.4018,Raven.Database.Server.HttpServer,Debug,,Request #  16: GET     -    10 ms - <system>   - 200 - /stats?noCache=-1490959021,
+2013-05-24 16:33:45.6822,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/Columns/Default' was not found,
+2013-05-24 16:33:45.6822,Raven.Database.Server.HttpServer,Debug,,Request #  17: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/Columns/Default?noCache=-1610301713,
+2013-05-24 16:33:45.6892,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 16:33:45.6892,Raven.Database.Server.HttpServer,Debug,,Request #  18: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=23517437,
+2013-05-24 16:33:45.7512,Raven.Database.Server.HttpServer,Debug,,Request #  19: GET     -    69 ms - <system>   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=222038844,
+2013-05-24 16:33:46.3062,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 16:33:46.3062,Raven.Database.Server.HttpServer,Debug,,Request #  20: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-236847752,
+2013-05-24 16:33:46.3142,Raven.Database.Server.HttpServer,Debug,,Request #  21: GET     -     0 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=-210856293,
+2013-05-24 16:33:46.3142,Raven.Database.Server.HttpServer,Debug,,Request #  22: GET     -     8 ms - <system>   - 200 - /stats?noCache=-1960536224,
+time,logger,level,database,message,exception
+2013-05-24 16:39:14.3190,Raven.Database.Impl.DocumentCacher,Info,<system>,"MemoryCache Settings:
+  PhysicalMemoryLimit = 99
+  CacheMemoryLimit    = 3205496832
+  PollingInterval     = 00:02:00",
+2013-05-24 16:39:14.3840,Raven.Storage.Esent.TransactionalStorage,Info,<system>,"Esent Settings:
+  MaxVerPages      = 16384
+  CacheSizeMax     = 262144
+  DatabasePageSize = 4096",
+2013-05-24 16:39:17.2802,Raven.Database.Storage.IndexDefinitionStorage,Info,<system>,"New index Raven%2fDocumentsByEntityName:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByEntityName : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByEntityName()
+	{
+		this.ViewText = @""from doc in docs 
+let Tag = doc[""""@metadata""""][""""Raven-Entity-Name""""]
+select new { Tag, LastModified = (DateTime)doc[""""@metadata""""][""""Last-Modified""""] };"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let Tag = doc[""@metadata""][""Raven-Entity-Name""]
+			select new {
+				Tag,
+				LastModified = (DateTime)doc[""@metadata""][""Last-Modified""],
+				__document_id = doc.__document_id
+			});
+		this.AddField(""LastModified"");
+		this.AddField(""__document_id"");
+		this.AddField(""Tag"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+
+Compiled to:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByEntityName : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByEntityName()
+	{
+		this.ViewText = @""from doc in docs 
+let Tag = doc[""""@metadata""""][""""Raven-Entity-Name""""]
+select new { Tag, LastModified = (DateTime)doc[""""@metadata""""][""""Last-Modified""""] };"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let Tag = doc[""@metadata""][""Raven-Entity-Name""]
+			select new {
+				Tag,
+				LastModified = (DateTime)doc[""@metadata""][""Last-Modified""],
+				__document_id = doc.__document_id
+			});
+		this.AddField(""LastModified"");
+		this.AddField(""__document_id"");
+		this.AddField(""Tag"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+",
+2013-05-24 16:39:17.3282,Raven.Database.Indexing.IndexStorage.Startup,Debug,<system>,Loading saved index Raven/DocumentsByEntityName,
+2013-05-24 16:39:17.3842,Raven.Database.Indexing.Index.Indexing,Debug,<system>,Creating index for Raven/DocumentsByEntityName,
+2013-05-24 16:39:18.8313,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Backup/Status' was not found,
+2013-05-24 16:39:18.8983,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 0, for: ReducingExecuter, will wait for additional work",
+2013-05-24 16:39:18.9053,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Authorization/WindowsSettings' was not found,
+2013-05-24 16:39:18.9053,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 0, for: IndexingExecuter, will wait for additional work",
+2013-05-24 16:39:24.2946,Raven.Database.Server.HttpServer,Debug,,Request #   1: GET     -   309 ms - <system>   - 200 - /databases?pageSize=1024&noCache=-1961307109,
+2013-05-24 16:43:54.5070,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Alerts' was not found,
+2013-05-24 16:43:54.5070,Raven.Database.Server.HttpServer,Debug,,Request #   2: GET     -    25 ms - <system>   - 404 - /docs/Raven/Alerts?noCache=-1552973856,
+2013-05-24 16:43:57.9222,Raven.Database.Server.HttpServer,Debug,,Request #   3: GET     -    54 ms - <system>   - 200 - /indexes/?namesOnly=true&start=0&pageSize=256&noCache=1262634008,
+2013-05-24 16:43:59.2713,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 16:43:59.2713,Raven.Database.Server.HttpServer,Debug,,Request #   4: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=320355448,
+2013-05-24 16:43:59.3773,Raven.Database.Server.HttpServer,Debug,,Request #   5: GET     -   108 ms - <system>   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=986481663,
+2013-05-24 16:43:59.9173,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 16:43:59.9173,Raven.Database.Server.HttpServer,Debug,,Request #   6: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-1959868769,
+2013-05-24 16:43:59.9703,Raven.Database.Server.HttpServer,Debug,,Request #   7: GET     -    35 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=1156374242,
+2013-05-24 16:44:00.0713,Raven.Database.Server.HttpServer,Debug,,Request #   8: GET     -   125 ms - <system>   - 200 - /stats?noCache=747425666,
+2013-05-24 16:45:41.1561,Raven.Database.Server.HttpServer,Debug,,Request #   9: GET     -     1 ms - <system>   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=1941767052,
+2013-05-24 16:45:41.4691,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 16:45:41.4691,Raven.Database.Server.HttpServer,Debug,,Request #  10: GET     -     1 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-798694089,
+2013-05-24 16:45:41.4691,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/Columns/Index/dynamic' was not found,
+2013-05-24 16:45:41.4691,Raven.Database.Server.HttpServer,Debug,,Request #  11: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/Columns/Index/dynamic?noCache=1474447593,
+2013-05-24 16:47:08.4631,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,"Inserted a new document with key '15edaea8-9257-46f8-bd46-75e99cd1abd0', update: False, ",
+2013-05-24 16:47:08.4911,Raven.Database.Indexing.WorkContext,Debug,<system>,Incremented work counter to 1 because: PUT 15edaea8-9257-46f8-bd46-75e99cd1abd0,
+2013-05-24 16:47:08.4911,Raven.Database.DocumentDatabase,Debug,<system>,Put document 15edaea8-9257-46f8-bd46-75e99cd1abd0 with etag 00000001-0000-0200-0000-000000000001,
+2013-05-24 16:47:08.4911,Raven.Database.Server.HttpServer,Debug,,Request #  12: POST    -   148 ms - <system>   - 201 - /docs/,
+2013-05-24 16:47:08.4911,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 1, for: ReducingExecuter, will wait for additional work",
+2013-05-24 16:47:08.5431,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,<system>,Found a total of 1 documents that requires indexing since etag: 00000000-0000-0000-0000-000000000000: (15edaea8-9257-46f8-bd46-75e99cd1abd0),
+2013-05-24 16:47:08.5821,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,<system>,"After read triggers executed, 1 documents remained",
+2013-05-24 16:47:08.5901,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,<system>,"Going to index 1 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000000-0000-0000-0000-000000000000: (15edaea8-9257-46f8-bd46-75e99cd1abd0)",
+2013-05-24 16:47:08.6241,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByEntityName. (15edaea8-9257-46f8-bd46-75e99cd1abd0),
+2013-05-24 16:47:08.6981,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key '15edaea8-9257-46f8-bd46-75e99cd1abd0' was found,
+2013-05-24 16:47:08.7141,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key '15edaea8-9257-46f8-bd46-75e99cd1abd0' was found,
+2013-05-24 16:47:08.7481,Raven.Database.Server.HttpServer,Debug,,Request #  13: GET     -    51 ms - <system>   - 200 - /docs/15edaea8-9257-46f8-bd46-75e99cd1abd0?noCache=1490750113,
+2013-05-24 16:47:08.7481,Raven.Database.Server.HttpServer,Debug,,Request #  14: GET     -    35 ms - <system>   - 200 - /docs/15edaea8-9257-46f8-bd46-75e99cd1abd0?noCache=1044704572,
+2013-05-24 16:47:08.7781,Raven.Database.Server.HttpServer,Debug,,Request #  15: GET     -     1 ms - <system>   - 200 - /docs?startsWith=15edaea8-9257-46f8-bd46-75e99cd1abd0-&start=0&pageSize=15&noCache=493774878,
+2013-05-24 16:47:08.8131,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key '15edaea8-9257-46f8-bd46' was not found,
+2013-05-24 16:47:08.8131,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key '15edaea8-9257-46f8' was not found,
+2013-05-24 16:47:08.8131,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key '15edaea8-9257' was not found,
+2013-05-24 16:47:08.8131,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key '15edaea8' was not found,
+2013-05-24 16:47:08.8241,Raven.Database.Server.HttpServer,Debug,,Request #  16: GET     -    32 ms - <system>   - 200 - /queries/?metadata-only=true&&id=15edaea8-9257-46f8-bd46&id=15edaea8-9257-46f8&id=15edaea8-9257&id=15edaea8&noCache=-1037160358,
+2013-05-24 16:47:08.9641,Raven.Database.Indexing.Index.Indexing,Debug,,"Indexing on 15edaea8-9257-46f8-bd46-75e99cd1abd0 result in index Raven/DocumentsByEntityName gave document: 	__document_id IS: 15edaea8-9257-46f8-bd46-75e99cd1abd0
+	LastModified I-: 2013-05-24T08:47:08.4611624Z
+",
+2013-05-24 16:47:08.9651,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key '15edaea8-9257-46f8-bd46' was not found,
+2013-05-24 16:47:08.9651,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key '15edaea8-9257-46f8' was not found,
+2013-05-24 16:47:08.9651,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key '15edaea8-9257' was not found,
+2013-05-24 16:47:08.9651,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key '15edaea8' was not found,
+2013-05-24 16:47:08.9651,Raven.Database.Server.HttpServer,Debug,,Request #  17: GET     -     0 ms - <system>   - 200 - /docs?startsWith=15edaea8-9257-46f8-bd46-75e99cd1abd0-&start=0&pageSize=15&noCache=1389380163,
+2013-05-24 16:47:08.9651,Raven.Database.Server.HttpServer,Debug,,Request #  18: GET     -     1 ms - <system>   - 200 - /queries/?metadata-only=true&&id=15edaea8-9257-46f8-bd46&id=15edaea8-9257-46f8&id=15edaea8-9257&id=15edaea8&noCache=523560122,
+2013-05-24 16:47:09.4002,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 1 documents for Raven/DocumentsByEntityName,
+2013-05-24 16:47:09.4012,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0200-0000-000000000001 for Raven/DocumentsByEntityName",
+2013-05-24 16:47:09.4372,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 2 because: WORK BY IndexingExecuter,
+2013-05-24 16:47:09.4372,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 2, for: ReducingExecuter, will wait for additional work",
+2013-05-24 16:47:09.4372,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 2, for: IndexingExecuter, will wait for additional work",
+2013-05-24 16:47:09.9542,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 16:47:09.9542,Raven.Database.Server.HttpServer,Debug,,Request #  19: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-1722509840,
+2013-05-24 16:47:09.9882,Raven.Database.Server.HttpServer,Debug,,Request #  20: GET     -    34 ms - <system>   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=1813128905,
+2013-05-24 16:47:15.1915,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 16:47:15.1915,Raven.Database.Server.HttpServer,Debug,,Request #  21: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=1357495819,
+2013-05-24 16:47:17.1776,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Alerts' was not found,
+2013-05-24 16:47:17.1776,Raven.Database.Server.HttpServer,Debug,,Request #  22: GET     -     0 ms - <system>   - 404 - /docs/Raven/Alerts?noCache=-1302110859,
+2013-05-24 16:47:39.1379,Raven.Database.Server.HttpServer,Debug,,Request #  23: GET     -    19 ms - <system>   - 200 - /license/status,
+2013-05-24 16:59:16.9748,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 16:59:16.9748,Raven.Database.Server.HttpServer,Debug,,Request #  24: GET     -     4 ms - <system>   - 404 - /docs/Raven/Replication/Destinations,
+2013-05-24 16:59:17.3958,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,"Inserted a new document with key 'users/ayende', update: False, ",
+2013-05-24 16:59:17.3958,Raven.Database.DocumentDatabase,Debug,<system>,Put document users/ayende with etag 00000001-0000-0200-0000-000000000002,
+2013-05-24 16:59:17.3958,Raven.Database.Indexing.WorkContext,Debug,<system>,Incremented work counter to 3 because: PUT users/ayende,
+2013-05-24 16:59:17.3958,Raven.Database.DocumentDatabase,Debug,<system>,Successfully executed 1 commands in 00:00:00.0134660,
+2013-05-24 16:59:17.3958,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 3, for: ReducingExecuter, will wait for additional work",
+2013-05-24 16:59:17.3958,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Found a total of 1 documents that requires indexing since etag: 00000001-0000-0200-0000-000000000001: (users/ayende),
+2013-05-24 16:59:17.3958,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After read triggers executed, 1 documents remained",
+2013-05-24 16:59:17.3958,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,<system>,"Going to index 1 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000001-0000-0200-0000-000000000001: (users/ayende)",
+2013-05-24 16:59:17.3958,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByEntityName. (users/ayende),
+2013-05-24 16:59:17.3958,Raven.Database.Server.HttpServer,Debug,,Request #  25: POST    -    40 ms - <system>   - 200 - /bulk_docs,
+2013-05-24 16:59:17.3958,Raven.Database.Indexing.Index.Indexing,Debug,,"Indexing on users/ayende result in index Raven/DocumentsByEntityName gave document: 	__document_id IS: users/ayende
+	Tag I-: Users
+	LastModified I-: 2013-05-24T08:59:17.3908548Z
+",
+2013-05-24 16:59:17.3958,Raven.Database.Server.HttpServer,Debug,,"	PUT users/ayende
+",
+2013-05-24 16:59:17.4288,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 1 documents for Raven/DocumentsByEntityName,
+2013-05-24 16:59:17.4288,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0200-0000-000000000002 for Raven/DocumentsByEntityName",
+2013-05-24 16:59:17.4288,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 4 because: WORK BY IndexingExecuter,
+2013-05-24 16:59:17.4288,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 4, for: ReducingExecuter, will wait for additional work",
+2013-05-24 16:59:17.4288,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 4, for: IndexingExecuter, will wait for additional work",
+2013-05-24 16:59:17.5758,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 16:59:17.5758,Raven.Database.Server.HttpServer,Debug,,Request #  26: GET     -     1 ms - <system>   - 200 - /docs/users/ayende,
+2013-05-24 17:08:52.4137,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:08:52.4137,Raven.Database.Server.HttpServer,Debug,,Request #  27: GET     -     1 ms - <system>   - 404 - /docs/Raven/Replication/Destinations,
+2013-05-24 17:09:15.1190,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Hilo/DetectFaceInfos' was not found,
+2013-05-24 17:09:15.1190,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/ServerPrefixForHilo' was not found,
+2013-05-24 17:09:15.1190,Raven.Database.Server.HttpServer,Debug,,Request #  28: GET     -     2 ms - <system>   - 200 - /queries/?&id=Raven/Hilo/DetectFaceInfos&id=Raven/ServerPrefixForHilo,
+2013-05-24 17:09:15.4080,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,"Inserted a new document with key 'Raven/Hilo/DetectFaceInfos', update: False, ",
+2013-05-24 17:09:15.4080,Raven.Database.Indexing.WorkContext,Debug,<system>,Incremented work counter to 5 because: PUT Raven/Hilo/DetectFaceInfos,
+2013-05-24 17:09:15.4080,Raven.Database.DocumentDatabase,Debug,<system>,Put document Raven/Hilo/DetectFaceInfos with etag 00000001-0000-0200-0000-000000000003,
+2013-05-24 17:09:15.4080,Raven.Database.Server.HttpServer,Debug,,Request #  29: PUT     -    21 ms - <system>   - 201 - /docs/Raven/Hilo/DetectFaceInfos,
+2013-05-24 17:09:15.4100,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 5, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:09:15.4100,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Found a total of 1 documents that requires indexing since etag: 00000001-0000-0200-0000-000000000002: (Raven/Hilo/DetectFaceInfos),
+2013-05-24 17:09:15.4100,Raven.Database.Impl.DocumentRetriever,Debug,,Trigger Raven.Database.Plugins.Builtins.FilterRavenInternalDocumentsReadTrigger asked us to ignore Raven/Hilo/DetectFaceInfos,
+2013-05-24 17:09:15.4100,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After read triggers executed, 1 documents remained",
+2013-05-24 17:09:15.4100,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,<system>,"Going to index 1 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000001-0000-0200-0000-000000000002: (Raven/Hilo/DetectFaceInfos)",
+2013-05-24 17:09:15.4100,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByEntityName. (Raven/Hilo/DetectFaceInfos),
+2013-05-24 17:09:15.4100,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 0 documents for Raven/DocumentsByEntityName,
+2013-05-24 17:09:15.4100,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0200-0000-000000000003 for Raven/DocumentsByEntityName",
+2013-05-24 17:09:15.4260,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 6 because: WORK BY IndexingExecuter,
+2013-05-24 17:09:15.4260,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 6, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:09:15.4260,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 6, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:09:15.5750,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,"Inserted a new document with key 'DetectFaceInfos/1', update: False, ",
+2013-05-24 17:09:15.5750,Raven.Database.DocumentDatabase,Debug,<system>,Put document DetectFaceInfos/1 with etag 00000001-0000-0200-0000-000000000004,
+2013-05-24 17:09:15.5750,Raven.Database.Indexing.WorkContext,Debug,<system>,Incremented work counter to 7 because: PUT DetectFaceInfos/1,
+2013-05-24 17:09:15.5750,Raven.Database.DocumentDatabase,Debug,<system>,Successfully executed 1 commands in 00:00:00.0051854,
+2013-05-24 17:09:15.5750,Raven.Database.Server.HttpServer,Debug,,Request #  30: POST    -     6 ms - <system>   - 200 - /bulk_docs,
+2013-05-24 17:09:15.5820,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Found a total of 1 documents that requires indexing since etag: 00000001-0000-0200-0000-000000000003: (DetectFaceInfos/1),
+2013-05-24 17:09:15.5820,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 7, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:09:15.5820,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After read triggers executed, 1 documents remained",
+2013-05-24 17:09:15.5820,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,<system>,"Going to index 1 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000001-0000-0200-0000-000000000003: (DetectFaceInfos/1)",
+2013-05-24 17:09:15.5820,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByEntityName. (DetectFaceInfos/1),
+2013-05-24 17:09:15.5820,Raven.Database.Indexing.Index.Indexing,Debug,,"Indexing on DetectFaceInfos/1 result in index Raven/DocumentsByEntityName gave document: 	__document_id IS: detectfaceinfos/1
+	Tag I-: DetectFaceInfos
+	LastModified I-: 2013-05-24T09:09:15.5740689Z
+",
+2013-05-24 17:09:15.5750,Raven.Database.Server.HttpServer,Debug,,"	PUT DetectFaceInfos/1
+",
+2013-05-24 17:09:15.5990,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 1 documents for Raven/DocumentsByEntityName,
+2013-05-24 17:09:15.5990,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0200-0000-000000000004 for Raven/DocumentsByEntityName",
+2013-05-24 17:09:15.5990,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 8 because: WORK BY IndexingExecuter,
+2013-05-24 17:09:15.5990,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 8, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:09:15.6160,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 8, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:09:20.3373,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,"Inserted a new document with key 'DetectFaceInfos/2', update: False, ",
+2013-05-24 17:09:20.3373,Raven.Database.DocumentDatabase,Debug,<system>,Put document DetectFaceInfos/2 with etag 00000001-0000-0200-0000-000000000005,
+2013-05-24 17:09:20.3373,Raven.Database.Indexing.WorkContext,Debug,<system>,Incremented work counter to 9 because: PUT DetectFaceInfos/2,
+2013-05-24 17:09:20.3373,Raven.Database.DocumentDatabase,Debug,<system>,Successfully executed 1 commands in 00:00:00.0012673,
+2013-05-24 17:09:20.3373,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Found a total of 1 documents that requires indexing since etag: 00000001-0000-0200-0000-000000000004: (DetectFaceInfos/2),
+2013-05-24 17:09:20.3373,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 9, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:09:20.3373,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After read triggers executed, 1 documents remained",
+2013-05-24 17:09:20.3393,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,<system>,"Going to index 1 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000001-0000-0200-0000-000000000004: (DetectFaceInfos/2)",
+2013-05-24 17:09:20.3393,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByEntityName. (DetectFaceInfos/2),
+2013-05-24 17:09:20.3393,Raven.Database.Indexing.Index.Indexing,Debug,,"Indexing on DetectFaceInfos/2 result in index Raven/DocumentsByEntityName gave document: 	__document_id IS: detectfaceinfos/2
+	Tag I-: DetectFaceInfos
+	LastModified I-: 2013-05-24T09:09:20.3373414Z
+",
+2013-05-24 17:09:20.3373,Raven.Database.Server.HttpServer,Debug,,Request #  31: POST    -     2 ms - <system>   - 200 - /bulk_docs,
+2013-05-24 17:09:20.3393,Raven.Database.Server.HttpServer,Debug,,"	PUT DetectFaceInfos/2
+",
+2013-05-24 17:09:20.3913,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 1 documents for Raven/DocumentsByEntityName,
+2013-05-24 17:09:20.3913,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0200-0000-000000000005 for Raven/DocumentsByEntityName",
+2013-05-24 17:09:20.3913,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 10 because: WORK BY IndexingExecuter,
+2013-05-24 17:09:20.3913,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 10, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:09:20.3913,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 10, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:09:45.9568,Raven.Database.Server.HttpServer,Debug,,Request #  32: GET     -    12 ms - <system>   - 200 - /changes/config?id=1/AccXO&command=disconnect&noCache=-1774842552,
+2013-05-24 17:09:47.0928,Raven.Database.Server.HttpServer,Debug,,Request #  33: GET     -     1 ms - <system>   - 200 - /docs?pageSize=0&noCache=-374742366,
+2013-05-24 17:09:47.1718,Raven.Database.Server.HttpServer,Debug,<system>,Request #  34: GET     -    15 ms - <system>   - 200 - /changes/events?id=1/PoKL8,
+2013-05-24 17:09:47.1878,Raven.Database.Server.HttpServer,Debug,,Request #  35: GET     -     0 ms - <system>   - 200 - /changes/config?id=1/PoKL8&command=watch-indexes&noCache=1728499502,
+2013-05-24 17:09:47.1878,Raven.Database.Server.HttpServer,Debug,,Request #  36: GET     -     0 ms - <system>   - 200 - /changes/config?id=1/PoKL8&command=watch-docs&noCache=-709567567,
+2013-05-24 17:09:47.1878,Raven.Database.Server.HttpServer,Debug,,Request #  37: GET     -     0 ms - <system>   - 200 - /changes/config?id=1/PoKL8&command=watch-docs&noCache=1153806282,
+2013-05-24 17:09:47.2418,Raven.Database.Server.HttpServer,Debug,,Request #  38: GET     -     2 ms - <system>   - 200 - /license/status?noCache=-37872718,
+2013-05-24 17:09:47.2978,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/StudioConfig' was not found,
+2013-05-24 17:09:47.2418,Raven.Database.Server.HttpServer,Debug,,Request #  40: GET     -     6 ms - <system>   - 200 - /build/version?noCache=-2046904594,
+2013-05-24 17:09:47.2418,Raven.Database.Server.HttpServer,Debug,,Request #  39: GET     -     3 ms - <system>   - 200 - /databases?pageSize=1024&noCache=-2069285384,
+2013-05-24 17:09:47.2508,Raven.Database.Server.HttpServer,Debug,,Request #  41: GET     -    16 ms - <system>   - 200 - /silverlight/ensureStartup?noCache=1789779976,
+2013-05-24 17:09:47.2978,Raven.Database.Server.HttpServer,Debug,,Request #  43: GET     -     1 ms - <system>   - 404 - /docs/Raven/StudioConfig?noCache=19906587,
+2013-05-24 17:09:47.2808,Raven.Database.Server.HttpServer,Debug,,Request #  42: GET     -    44 ms - <system>   - 200 - /stats?noCache=-1196485072,
+2013-05-24 17:09:50.7390,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/Columns/AllDocuments' was not found,
+2013-05-24 17:09:50.7390,Raven.Database.Server.HttpServer,Debug,,Request #  44: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/Columns/AllDocuments?noCache=144838114,
+2013-05-24 17:09:50.7450,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:09:50.7450,Raven.Database.Server.HttpServer,Debug,,Request #  45: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-995568025,
+2013-05-24 17:09:50.8070,Raven.Database.Server.HttpServer,Debug,,Request #  46: GET     -    26 ms - <system>   - 200 - /stats?noCache=-1829636050,
+2013-05-24 17:09:50.8070,Raven.Database.Server.HttpServer,Debug,,Request #  47: GET     -    27 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=-1009311903,
+2013-05-24 17:11:27.8866,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:11:27.8866,Raven.Database.Server.HttpServer,Debug,,Request #  48: GET     -     2 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-520027166,
+2013-05-24 17:11:27.9326,Raven.Database.Server.HttpServer,Debug,,Request #  49: GET     -     4 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=-630217972,
+2013-05-24 17:11:27.9326,Raven.Database.Server.HttpServer,Debug,,Request #  50: GET     -    26 ms - <system>   - 200 - /stats?noCache=1318643439,
+2013-05-24 17:11:49.6958,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:11:49.6958,Raven.Database.Server.HttpServer,Debug,,Request #  51: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-273148391,
+2013-05-24 17:11:49.7568,Raven.Database.Server.HttpServer,Debug,,Request #  52: GET     -     3 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=-2042571538,
+2013-05-24 17:11:49.7658,Raven.Database.Server.HttpServer,Debug,,Request #  53: GET     -    13 ms - <system>   - 200 - /stats?noCache=-1179073020,
+2013-05-24 17:12:16.7434,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/Columns/Default' was not found,
+2013-05-24 17:12:16.7434,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:12:16.7434,Raven.Database.Server.HttpServer,Debug,,Request #  54: GET     -     1 ms - <system>   - 404 - /docs/Raven/Studio/Columns/Default?noCache=690104839,
+2013-05-24 17:12:16.7434,Raven.Database.Server.HttpServer,Debug,,Request #  55: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=166365574,
+2013-05-24 17:12:16.7604,Raven.Database.Server.HttpServer,Debug,,Request #  56: GET     -    10 ms - <system>   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=89376982,
+2013-05-24 17:12:17.2514,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:12:17.2514,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:12:17.2914,Raven.Database.Server.HttpServer,Debug,,Request #  57: GET     -   347 ms - <system>   - 0 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=0,
+2013-05-24 17:12:17.2914,Raven.Database.Server.HttpServer,Debug,,Request #  58: GET     -   347 ms - <system>   - 0 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=0,
+2013-05-24 17:12:17.3094,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 293 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 0 returned out of 1 total.
+",
+2013-05-24 17:12:17.3094,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 293 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 0 returned out of 2 total.
+",
+2013-05-24 17:12:17.3334,Raven.Database.Server.HttpServer,Debug,,Request #  59: POST    -   414 ms - <system>   - 200 - /multi_get?parallel=yes&noCache=-2098853223,
+2013-05-24 17:12:17.3564,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/Columns/Collection/DetectFaceInfos' was not found,
+2013-05-24 17:12:17.3564,Raven.Database.Server.HttpServer,Debug,,Request #  60: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/Columns/Collection/DetectFaceInfos?noCache=-980233506,
+2013-05-24 17:12:17.4504,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:12:17.4774,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:12:17.4794,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:12:17.4794,Raven.Database.Server.HttpServer,Debug,,Request #  61: GET     -    37 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=1031089634,
+2013-05-24 17:12:17.4794,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 33 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:12:17.7214,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:12:17.7214,Raven.Database.Server.HttpServer,Debug,,Request #  62: GET     -     1 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=372309737,
+2013-05-24 17:12:17.7834,Raven.Database.Server.HttpServer,Debug,,Request #  63: GET     -     4 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=393042413,
+2013-05-24 17:12:17.8044,Raven.Database.Server.HttpServer,Debug,,Request #  64: GET     -    28 ms - <system>   - 200 - /stats?noCache=-206152246,
+2013-05-24 17:12:18.3905,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:12:18.3905,Raven.Database.Server.HttpServer,Debug,,Request #  65: GET     -     1 ms - <system>   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=-774784675,
+2013-05-24 17:12:18.3905,Raven.Database.Server.HttpServer,Debug,,Request #  66: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-1155834104,
+2013-05-24 17:12:18.4005,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:12:18.4005,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:12:18.4005,Raven.Database.Server.HttpServer,Debug,,Request #  67: GET     -     3 ms - <system>   - 0 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=0,
+2013-05-24 17:12:18.4005,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 3 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 0 returned out of 2 total.
+",
+2013-05-24 17:12:18.4005,Raven.Database.Server.HttpServer,Debug,,Request #  68: GET     -     3 ms - <system>   - 0 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=0,
+2013-05-24 17:12:18.4195,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 0 returned out of 1 total.
+",
+2013-05-24 17:12:18.4315,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:12:18.4315,Raven.Database.Server.HttpServer,Debug,,Request #  69: POST    -    35 ms - <system>   - 200 - /multi_get?parallel=yes&noCache=-1506477453,
+2013-05-24 17:12:18.4315,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:12:18.4315,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:12:18.4455,Raven.Database.Server.HttpServer,Debug,,Request #  70: GET     -    11 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=-1598784101,
+2013-05-24 17:12:18.4455,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 9 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:12:20.6246,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/Columns/Collection/Users' was not found,
+2013-05-24 17:12:20.6246,Raven.Database.Server.HttpServer,Debug,,Request #  71: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/Columns/Collection/Users?noCache=-2141339420,
+2013-05-24 17:12:20.7026,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:12:20.7026,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:12:20.7026,Raven.Database.Server.HttpServer,Debug,,Request #  72: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=998452909,
+2013-05-24 17:12:20.7076,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:12:22.0427,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:12:22.0427,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:12:22.0427,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:12:22.0427,Raven.Database.Server.HttpServer,Debug,,Request #  73: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=38950697,
+2013-05-24 17:12:22.0497,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:12:23.2958,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:12:23.2958,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:12:23.2978,Raven.Database.Server.HttpServer,Debug,,Request #  74: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=-755982797,
+2013-05-24 17:12:23.2978,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:12:23.6338,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:12:23.6338,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:12:23.6338,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:12:23.6338,Raven.Database.Server.HttpServer,Debug,,Request #  75: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=1667107756,
+2013-05-24 17:12:23.6338,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:12:24.8228,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:12:24.8228,Raven.Database.Server.HttpServer,Debug,,Request #  76: GET     -     1 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=1982963918,
+2013-05-24 17:12:24.8608,Raven.Database.Server.HttpServer,Debug,,Request #  77: GET     -     2 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=1939249201,
+2013-05-24 17:12:24.8608,Raven.Database.Server.HttpServer,Debug,,Request #  78: GET     -    12 ms - <system>   - 200 - /stats?noCache=-1102114168,
+2013-05-24 17:12:25.5649,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:12:25.5649,Raven.Database.Server.HttpServer,Debug,,Request #  79: GET     -     2 ms - <system>   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=879813478,
+2013-05-24 17:12:25.5769,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:12:25.5769,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:12:25.5649,Raven.Database.Server.HttpServer,Debug,,Request #  80: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-496700345,
+2013-05-24 17:12:25.5769,Raven.Database.Server.HttpServer,Debug,,Request #  81: GET     -     3 ms - <system>   - 0 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=0,
+2013-05-24 17:12:25.5769,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 3 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 0 returned out of 2 total.
+",
+2013-05-24 17:12:25.5769,Raven.Database.Server.HttpServer,Debug,,Request #  82: GET     -     5 ms - <system>   - 0 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=0,
+2013-05-24 17:12:25.6169,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:12:25.6169,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:12:25.6169,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:12:25.5989,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 4 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 0 returned out of 1 total.
+",
+2013-05-24 17:12:25.6169,Raven.Database.Server.HttpServer,Debug,,Request #  83: GET     -     5 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=-1218523669,
+2013-05-24 17:12:25.6259,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 3 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:12:25.6259,Raven.Database.Server.HttpServer,Debug,,Request #  84: POST    -    51 ms - <system>   - 200 - /multi_get?parallel=yes&noCache=-1910582379,
+2013-05-24 17:12:26.5459,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:12:26.5459,Raven.Database.Server.HttpServer,Debug,,Request #  85: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-596670807,
+2013-05-24 17:12:29.2021,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:12:29.2021,Raven.Database.Server.HttpServer,Debug,,Request #  86: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-1997067295,
+2013-05-24 17:12:30.9452,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Alerts' was not found,
+2013-05-24 17:12:30.9452,Raven.Database.Server.HttpServer,Debug,,Request #  87: GET     -     0 ms - <system>   - 404 - /docs/Raven/Alerts?noCache=-1275477703,
+2013-05-24 17:12:41.4448,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:12:41.4448,Raven.Database.Server.HttpServer,Debug,,Request #  88: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-1326447606,
+2013-05-24 17:12:41.4888,Raven.Database.Server.HttpServer,Debug,,Request #  89: GET     -     3 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=409533477,
+2013-05-24 17:12:41.4888,Raven.Database.Server.HttpServer,Debug,,Request #  90: GET     -    15 ms - <system>   - 200 - /stats?noCache=-1474106703,
+2013-05-24 17:26:50.5544,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:26:50.5544,Raven.Database.Server.HttpServer,Debug,,Request #  91: GET     -     2 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=1493272724,
+2013-05-24 17:26:50.5814,Raven.Database.Server.HttpServer,Debug,,Request #  92: GET     -    32 ms - <system>   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=1246108643,
+2013-05-24 17:26:50.6324,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:26:50.6324,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:26:50.6324,Raven.Database.Server.HttpServer,Debug,,Request #  93: GET     -    50 ms - <system>   - 0 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=0,
+2013-05-24 17:26:50.6474,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 49 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 0 returned out of 1 total.
+",
+2013-05-24 17:26:50.6474,Raven.Database.Server.HttpServer,Debug,,Request #  94: GET     -    54 ms - <system>   - 0 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=0,
+2013-05-24 17:26:50.6474,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 54 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 0 returned out of 2 total.
+",
+2013-05-24 17:26:50.6744,Raven.Database.Server.HttpServer,Debug,,Request #  95: POST    -    79 ms - <system>   - 200 - /multi_get?parallel=yes&noCache=-338448861,
+2013-05-24 17:26:50.7124,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:26:50.7124,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:26:50.7124,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:26:50.7334,Raven.Database.Server.HttpServer,Debug,,Request #  96: GET     -    63 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=1936826061,
+2013-05-24 17:26:50.7334,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 61 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:03.5191,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:03.5191,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:03.5191,Raven.Database.Server.HttpServer,Debug,,Request #  97: GET     -     5 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=457425591,
+2013-05-24 17:27:03.5191,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 4 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:04.8822,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:04.8822,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:04.8822,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:04.8822,Raven.Database.Server.HttpServer,Debug,,Request #  98: GET     -     6 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=1767915597,
+2013-05-24 17:27:04.8822,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:07.3133,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:07.3133,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:07.3133,Raven.Database.Server.HttpServer,Debug,,Request #  99: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=-703388865,
+2013-05-24 17:27:07.3133,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 3 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:08.7924,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:08.7924,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:08.7924,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:08.7924,Raven.Database.Server.HttpServer,Debug,,Request # 100: GET     -     7 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=-373222802,
+2013-05-24 17:27:08.7924,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 3 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:09.3374,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:09.3374,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:09.3374,Raven.Database.Server.HttpServer,Debug,,Request # 101: GET     -     2 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=-799604001,
+2013-05-24 17:27:09.3374,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:09.7035,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:09.7035,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:09.7035,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:09.7035,Raven.Database.Server.HttpServer,Debug,,Request # 102: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=626045063,
+2013-05-24 17:27:09.7035,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:09.9715,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:09.9715,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:09.9715,Raven.Database.Server.HttpServer,Debug,,Request # 103: GET     -     2 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=1668280868,
+2013-05-24 17:27:09.9785,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:10.2005,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:10.2005,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:10.2005,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:10.2005,Raven.Database.Server.HttpServer,Debug,,Request # 104: GET     -     2 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=-1267777399,
+2013-05-24 17:27:10.2005,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 1 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:10.6025,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:10.6025,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:10.6025,Raven.Database.Server.HttpServer,Debug,,Request # 105: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=1908056805,
+2013-05-24 17:27:10.6025,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 3 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:23.0092,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:23.0092,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:23.0092,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:23.0092,Raven.Database.Server.HttpServer,Debug,,Request # 106: GET     -    11 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=-203756847,
+2013-05-24 17:27:23.0092,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 11 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:23.5362,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:23.5362,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:23.5362,Raven.Database.Server.HttpServer,Debug,,Request # 107: GET     -     8 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=1116299993,
+2013-05-24 17:27:23.5362,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 7 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:23.9393,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:23.9393,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:23.9393,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:23.9393,Raven.Database.Server.HttpServer,Debug,,Request # 108: GET     -     9 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=-2143361305,
+2013-05-24 17:27:23.9393,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 8 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:24.4093,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:24.4093,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:24.4093,Raven.Database.Server.HttpServer,Debug,,Request # 109: GET     -     5 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=820295510,
+2013-05-24 17:27:24.4093,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 4 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:24.8653,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:24.8653,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:24.8653,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:24.8653,Raven.Database.Server.HttpServer,Debug,,Request # 110: GET     -     2 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=268391867,
+2013-05-24 17:27:24.8653,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:25.1953,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:25.1953,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:25.1953,Raven.Database.Server.HttpServer,Debug,,Request # 111: GET     -     2 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=-1540943006,
+2013-05-24 17:27:25.2023,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:25.6454,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:25.6454,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:25.6454,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:25.6454,Raven.Database.Server.HttpServer,Debug,,Request # 112: GET     -     2 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=-602513348,
+2013-05-24 17:27:25.6454,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:25.9344,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:25.9354,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:25.9354,Raven.Database.Server.HttpServer,Debug,,Request # 113: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=-737443340,
+2013-05-24 17:27:25.9354,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 1 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:26.1674,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:26.1674,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:26.1674,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:26.1714,Raven.Database.Server.HttpServer,Debug,,Request # 114: GET     -     5 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=-539405108,
+2013-05-24 17:27:26.1714,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:26.4294,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:26.4294,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:26.4294,Raven.Database.Server.HttpServer,Debug,,Request # 115: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=-218769830,
+2013-05-24 17:27:26.4354,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:26.6354,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:26.6354,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:26.6354,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:26.6354,Raven.Database.Server.HttpServer,Debug,,Request # 116: GET     -     2 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=-1448213544,
+2013-05-24 17:27:26.6404,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 1 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:27.3255,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:27.3255,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:27.3255,Raven.Database.Server.HttpServer,Debug,,Request # 117: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=966747210,
+2013-05-24 17:27:27.3255,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:28.1665,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:28.1665,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:28.1665,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:28.1665,Raven.Database.Server.HttpServer,Debug,,Request # 118: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=-1098260505,
+2013-05-24 17:27:28.1665,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:33.2388,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:33.2388,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:33.2388,Raven.Database.Server.HttpServer,Debug,,Request # 119: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=611795364,
+2013-05-24 17:27:33.2388,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:33.5768,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:33.5768,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:33.5768,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:33.5788,Raven.Database.Server.HttpServer,Debug,,Request # 120: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=-2076020636,
+2013-05-24 17:27:33.5788,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:33.8628,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:33.8628,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:33.8628,Raven.Database.Server.HttpServer,Debug,,Request # 121: GET     -     4 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=-1457979877,
+2013-05-24 17:27:33.8628,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:34.1209,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:34.1209,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:34.1209,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:34.1209,Raven.Database.Server.HttpServer,Debug,,Request # 122: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=-42360928,
+2013-05-24 17:27:34.1209,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:34.3859,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:34.3859,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:34.3859,Raven.Database.Server.HttpServer,Debug,,Request # 123: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=-1251116877,
+2013-05-24 17:27:34.3919,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:34.6469,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:34.6469,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:34.6469,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:34.6469,Raven.Database.Server.HttpServer,Debug,,Request # 124: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=1500284234,
+2013-05-24 17:27:34.6469,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:34.9499,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:34.9499,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:34.9519,Raven.Database.Server.HttpServer,Debug,,Request # 125: GET     -     2 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=686150161,
+2013-05-24 17:27:34.9519,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 1 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:35.2379,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:35.2379,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:35.2379,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:35.2379,Raven.Database.Server.HttpServer,Debug,,Request # 126: GET     -     4 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=-1412420142,
+2013-05-24 17:27:35.2379,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:27:35.5269,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:27:35.5269,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'users/ayende' was found,
+2013-05-24 17:27:35.5289,Raven.Database.Server.HttpServer,Debug,,Request # 127: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=30&noCache=-1963143592,
+2013-05-24 17:27:35.5289,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 3 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 1 total.
+",
+2013-05-24 17:27:36.3270,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:27:36.3270,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:27:36.3270,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:27:36.3270,Raven.Database.Server.HttpServer,Debug,,Request # 128: GET     -     4 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=832883195,
+2013-05-24 17:27:36.3270,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:29:22.9991,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:29:22.9991,Raven.Database.Server.HttpServer,Debug,,Request # 129: GET     -     1 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=1625868554,
+2013-05-24 17:29:25.8832,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Alerts' was not found,
+2013-05-24 17:29:25.8832,Raven.Database.Server.HttpServer,Debug,,Request # 130: GET     -     0 ms - <system>   - 404 - /docs/Raven/Alerts?noCache=478159419,
+2013-05-24 17:29:29.3174,Raven.Database.Server.HttpServer,Debug,,Request # 131: GET     -     2 ms - <system>   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=739220849,
+2013-05-24 17:29:29.4244,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:29:29.4254,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:29:29.4254,Raven.Database.Server.HttpServer,Debug,,Request # 132: GET     -     3 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=1&noCache=351342909,
+2013-05-24 17:29:29.4254,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:29:29.4254,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/Columns/Index/dynamic/DetectFaceInfos' was not found,
+2013-05-24 17:29:29.4254,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 2 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 2 total.
+",
+2013-05-24 17:29:29.4254,Raven.Database.Server.HttpServer,Debug,,Request # 134: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/Columns/Index/dynamic/DetectFaceInfos?noCache=2067744638,
+2013-05-24 17:29:29.4254,Raven.Database.Server.HttpServer,Debug,,Request # 133: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=1490019917,
+2013-05-24 17:36:33.6927,Raven.Database.Server.HttpServer,Debug,,Request # 135: GET     -     4 ms - <system>   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=-933562318,
+2013-05-24 17:36:33.8567,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:36:33.8587,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:36:33.8587,Raven.Database.Server.HttpServer,Debug,,Request # 136: GET     -     7 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=1&noCache=1925424623,
+2013-05-24 17:36:33.8587,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 7 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 1 returned out of 2 total.
+",
+2013-05-24 17:36:36.0328,Raven.Database.Server.HttpServer,Debug,,Request # 137: GET     -     1 ms - <system>   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=-2130186103,
+2013-05-24 17:36:36.0408,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:36:36.0408,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:36:36.0408,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:Users,
+2013-05-24 17:36:36.0408,Raven.Database.Server.HttpServer,Debug,,Request # 138: GET     -     1 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=114735828,
+2013-05-24 17:36:36.0408,Raven.Database.Server.HttpServer,Debug,,Request # 139: GET     -     7 ms - <system>   - 0 - /indexes/Raven/DocumentsByEntityName?query=Tag%253AUsers&pageSize=0,
+2013-05-24 17:36:36.0658,Raven.Database.Indexing.Index.Querying,Debug,<system>,Issuing query on index Raven/DocumentsByEntityName for: Tag:DetectFaceInfos,
+2013-05-24 17:36:36.0408,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:Users
+	Time: 7 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 0 returned out of 1 total.
+",
+2013-05-24 17:36:36.0658,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/1' was found,
+2013-05-24 17:36:36.0658,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'detectfaceinfos/2' was found,
+2013-05-24 17:36:36.0408,Raven.Database.Server.HttpServer,Debug,,Request # 140: GET     -     9 ms - <system>   - 0 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=0,
+2013-05-24 17:36:36.0658,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 9 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 0 returned out of 2 total.
+",
+2013-05-24 17:36:36.0658,Raven.Database.Server.HttpServer,Debug,,Request # 141: GET     -     4 ms - <system>   - 200 - /indexes/Raven/DocumentsByEntityName?query=Tag%253ADetectFaceInfos&pageSize=30&noCache=124505354,
+2013-05-24 17:36:36.0749,Raven.Database.Server.HttpServer,Debug,,"	Query: Tag:DetectFaceInfos
+	Time: 4 ms
+	Index: Raven/DocumentsByEntityName
+	Results: 2 returned out of 2 total.
+",
+2013-05-24 17:36:36.0749,Raven.Database.Server.HttpServer,Debug,,Request # 142: POST    -    36 ms - <system>   - 200 - /multi_get?parallel=yes&noCache=-111279818,
+2013-05-24 17:38:29.9024,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,"Inserted a new document with key 'Raven/Databases/FaceInfo', update: False, ",
+2013-05-24 17:38:29.9294,Raven.Database.Indexing.WorkContext,Debug,<system>,Incremented work counter to 11 because: PUT Raven/Databases/FaceInfo,
+2013-05-24 17:38:29.9294,Raven.Database.DocumentDatabase,Debug,<system>,Put document Raven/Databases/FaceInfo with etag 00000001-0000-0200-0000-000000000006,
+2013-05-24 17:38:29.9294,Raven.Database.Server.HttpServer,Debug,,Request # 143: PUT     -   113 ms - <system>   - 200 - /admin/databases/FaceInfo,
+2013-05-24 17:38:29.9384,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 11, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:38:29.9384,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Found a total of 1 documents that requires indexing since etag: 00000001-0000-0200-0000-000000000005: (Raven/Databases/FaceInfo),
+2013-05-24 17:38:29.9384,Raven.Database.Impl.DocumentRetriever,Debug,,Trigger Raven.Database.Plugins.Builtins.FilterRavenInternalDocumentsReadTrigger asked us to ignore Raven/Databases/FaceInfo,
+2013-05-24 17:38:29.9384,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After read triggers executed, 1 documents remained",
+2013-05-24 17:38:29.9384,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,<system>,"Going to index 1 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000001-0000-0200-0000-000000000005: (Raven/Databases/FaceInfo)",
+2013-05-24 17:38:29.9384,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByEntityName. (Raven/Databases/FaceInfo),
+2013-05-24 17:38:29.9384,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 0 documents for Raven/DocumentsByEntityName,
+2013-05-24 17:38:29.9634,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0200-0000-000000000006 for Raven/DocumentsByEntityName",
+2013-05-24 17:38:29.9634,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 12 because: WORK BY IndexingExecuter,
+2013-05-24 17:38:29.9634,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 12, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:38:29.9634,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 12, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:38:29.9704,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Databases/FaceInfo' was found,
+2013-05-24 17:38:29.9864,Raven.Database.Server.HttpServer,Debug,,Request # 144: GET     -    43 ms - <system>   - 200 - /stats?noCache=-1795174862,
+2013-05-24 17:38:30.1634,Raven.Database.Impl.DocumentCacher,Info,FaceInfo,"MemoryCache Settings:
+  PhysicalMemoryLimit = 99
+  CacheMemoryLimit    = 3205496832
+  PollingInterval     = 00:02:00",
+2013-05-24 17:38:30.1634,Raven.Storage.Esent.TransactionalStorage,Info,FaceInfo,"Esent Settings:
+  MaxVerPages      = 16384
+  CacheSizeMax     = 262144
+  DatabasePageSize = 4096",
+2013-05-24 17:38:31.3794,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Encryption/Verification' was not found,
+2013-05-24 17:38:31.3794,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Encryption/Verification' was not found,
+2013-05-24 17:38:31.3934,Raven.Database.DocumentDatabase,Debug,FaceInfo,Delete a document with key: Raven/Quotas/Documents and etag ,
+2013-05-24 17:38:31.3934,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Quotas/Documents' was not found,
+2013-05-24 17:38:31.4074,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Quotas/Documents' was not found,
+2013-05-24 17:38:31.4074,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Quotas/Documents' was not found,
+2013-05-24 17:38:31.4074,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,"Document with key 'Raven/Quotas/Documents' was not found, and considered deleted",
+2013-05-24 17:38:31.4214,Raven.Database.DocumentDatabase,Debug,FaceInfo,Delete a document with key: Raven/Quotas/Size and etag ,
+2013-05-24 17:38:31.4214,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Quotas/Size' was not found,
+2013-05-24 17:38:31.4214,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Quotas/Size' was not found,
+2013-05-24 17:38:31.4214,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Quotas/Size' was not found,
+2013-05-24 17:38:31.4214,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,"Document with key 'Raven/Quotas/Size' was not found, and considered deleted",
+2013-05-24 17:38:31.4214,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Encryption/Verification' was not found,
+2013-05-24 17:38:31.4214,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Encryption/Verification' was not found,
+2013-05-24 17:38:31.4434,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Encryption/Verification' was not found,
+2013-05-24 17:38:31.4685,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,"Inserted a new document with key 'Raven/Encryption/Verification', update: False, ",
+2013-05-24 17:38:31.4685,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"Incremented work counter to 1 because: DEL Raven/Quotas/Documents, DEL Raven/Quotas/Size, PUT Raven/Encryption/Verification",
+2013-05-24 17:38:31.4685,Raven.Database.DocumentDatabase,Debug,FaceInfo,Put document Raven/Encryption/Verification with etag 00000001-0000-0100-0000-000000000001,
+2013-05-24 17:38:31.4685,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Backup/Periodic/Setup' was not found,
+2013-05-24 17:38:31.4685,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Backup/Status' was not found,
+2013-05-24 17:38:31.6715,Raven.Database.Storage.IndexDefinitionStorage,Info,,"New index Raven%2fDocumentsByExpirationDate:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByExpirationDate : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByExpirationDate()
+	{
+		this.ViewText = @""
+	from doc in docs
+	let expiry = doc[""""@metadata""""][""""Raven-Expiration-Date""""]
+	where expiry != null
+	select new { Expiry = expiry }
+"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let expiry = doc[""@metadata""][""Raven-Expiration-Date""]
+			where expiry != null
+			select new {
+				Expiry = expiry,
+				__document_id = doc.__document_id
+			});
+		this.AddField(""Expiry"");
+		this.AddField(""__document_id"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+
+Compiled to:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByExpirationDate : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByExpirationDate()
+	{
+		this.ViewText = @""
+	from doc in docs
+	let expiry = doc[""""@metadata""""][""""Raven-Expiration-Date""""]
+	where expiry != null
+	select new { Expiry = expiry }
+"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let expiry = doc[""@metadata""][""Raven-Expiration-Date""]
+			where expiry != null
+			select new {
+				Expiry = expiry,
+				__document_id = doc.__document_id
+			});
+		this.AddField(""Expiry"");
+		this.AddField(""__document_id"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+",
+2013-05-24 17:38:31.6715,Raven.Database.Indexing.IndexStorage,Debug,,Creating index Raven/DocumentsByExpirationDate with encoded name Raven/DocumentsByExpirationDate,
+2013-05-24 17:38:31.7645,Raven.Database.Indexing.Index.Indexing,Debug,,Creating index for Raven/DocumentsByExpirationDate,
+2013-05-24 17:38:31.7645,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 2 because: PUT INDEX Raven/DocumentsByExpirationDate,
+2013-05-24 17:38:31.7835,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/SqlReplication/Status' was not found,
+2013-05-24 17:38:31.8025,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:38:31.8025,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:38:31.8025,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 2, for: Sql Replication, will wait for additional work",
+2013-05-24 17:38:31.8025,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:38:31.8025,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 2, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:38:31.8125,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,FaceInfo,Found a total of 1 documents that requires indexing since etag: 00000000-0000-0000-0000-000000000000: (Raven/Encryption/Verification),
+2013-05-24 17:38:31.8125,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 2, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:38:31.8125,Raven.Database.Impl.DocumentRetriever,Debug,,Trigger Raven.Database.Plugins.Builtins.FilterRavenInternalDocumentsReadTrigger asked us to ignore Raven/Encryption/Verification,
+2013-05-24 17:38:31.8125,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,FaceInfo,"After read triggers executed, 1 documents remained",
+2013-05-24 17:38:31.8125,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,FaceInfo,"Going to index 1 documents in IndexName: Raven/DocumentsByExpirationDate, LastIndexedEtag: 00000000-0000-0000-0000-000000000000: (Raven/Encryption/Verification)",
+2013-05-24 17:38:31.8125,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByExpirationDate. (Raven/Encryption/Verification),
+2013-05-24 17:38:31.8125,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 0 documents for Raven/DocumentsByExpirationDate,
+2013-05-24 17:38:31.8125,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0100-0000-000000000001 for Raven/DocumentsByExpirationDate",
+2013-05-24 17:38:31.8255,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 3 because: WORK BY IndexingExecuter,
+2013-05-24 17:38:31.8255,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 3, for: Sql Replication, will wait for additional work",
+2013-05-24 17:38:31.8255,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:38:31.8255,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:38:31.8255,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 3, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:38:31.8255,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 3, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:38:31.8255,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 3, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:38:31.9665,Raven.Database.Server.HttpServer,Debug,,Request # 145: GET     -    14 ms - <system>   - 200 - /stats?noCache=-480852429,
+2013-05-24 17:38:32.1455,Raven.Database.Storage.IndexDefinitionStorage,Info,FaceInfo,"New index Raven%2fDocumentsByEntityName:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByEntityName : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByEntityName()
+	{
+		this.ViewText = @""from doc in docs 
+let Tag = doc[""""@metadata""""][""""Raven-Entity-Name""""]
+select new { Tag, LastModified = (DateTime)doc[""""@metadata""""][""""Last-Modified""""] };"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let Tag = doc[""@metadata""][""Raven-Entity-Name""]
+			select new {
+				Tag,
+				LastModified = (DateTime)doc[""@metadata""][""Last-Modified""],
+				__document_id = doc.__document_id
+			});
+		this.AddField(""LastModified"");
+		this.AddField(""__document_id"");
+		this.AddField(""Tag"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+
+Compiled to:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByEntityName : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByEntityName()
+	{
+		this.ViewText = @""from doc in docs 
+let Tag = doc[""""@metadata""""][""""Raven-Entity-Name""""]
+select new { Tag, LastModified = (DateTime)doc[""""@metadata""""][""""Last-Modified""""] };"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let Tag = doc[""@metadata""][""Raven-Entity-Name""]
+			select new {
+				Tag,
+				LastModified = (DateTime)doc[""@metadata""][""Last-Modified""],
+				__document_id = doc.__document_id
+			});
+		this.AddField(""LastModified"");
+		this.AddField(""__document_id"");
+		this.AddField(""Tag"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+",
+2013-05-24 17:38:32.1455,Raven.Database.Indexing.IndexStorage,Debug,FaceInfo,Creating index Raven/DocumentsByEntityName with encoded name Raven/DocumentsByEntityName,
+2013-05-24 17:38:32.1665,Raven.Database.Indexing.Index.Indexing,Debug,FaceInfo,Creating index for Raven/DocumentsByEntityName,
+2013-05-24 17:38:32.1685,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,Incremented work counter to 4 because: PUT INDEX Raven/DocumentsByEntityName,
+2013-05-24 17:38:32.1685,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 4, for: Sql Replication, will wait for additional work",
+2013-05-24 17:38:32.1685,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:38:32.1685,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:38:32.1685,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 4, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:38:32.1685,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 4, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:38:32.1685,Raven.Database.Server.HttpServer,Debug,,"Request # 146: GET     - 2,221 ms - FaceInfo   - 200 - /silverlight/ensureStartup?noCache=1325873215",
+2013-05-24 17:38:32.2095,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Found a total of 1 documents that requires indexing since etag: 00000000-0000-0000-0000-000000000000: (Raven/Encryption/Verification),
+2013-05-24 17:38:32.2095,Raven.Database.Impl.DocumentRetriever,Debug,,Trigger Raven.Database.Plugins.Builtins.FilterRavenInternalDocumentsReadTrigger asked us to ignore Raven/Encryption/Verification,
+2013-05-24 17:38:32.2095,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After read triggers executed, 1 documents remained",
+2013-05-24 17:38:32.2095,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,FaceInfo,"Going to index 1 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000000-0000-0000-0000-000000000000: (Raven/Encryption/Verification)",
+2013-05-24 17:38:32.2095,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByEntityName. (Raven/Encryption/Verification),
+2013-05-24 17:38:32.2225,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 0 documents for Raven/DocumentsByEntityName,
+2013-05-24 17:38:32.2225,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0100-0000-000000000001 for Raven/DocumentsByEntityName",
+2013-05-24 17:38:32.2225,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 5 because: WORK BY IndexingExecuter,
+2013-05-24 17:38:32.2225,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 5, for: Sql Replication, will wait for additional work",
+2013-05-24 17:38:32.2225,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:38:32.2225,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:38:32.2225,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 5, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:38:32.2225,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 5, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:38:32.2225,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 5, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:38:32.2805,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was not found,
+2013-05-24 17:38:32.2805,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was not found,
+2013-05-24 17:38:32.2805,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was not found,
+2013-05-24 17:38:32.2805,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,"Inserted a new document with key 'Raven/Versioning/DefaultConfiguration', update: False, ",
+2013-05-24 17:38:32.2805,Raven.Database.DocumentDatabase,Debug,FaceInfo,Put document Raven/Versioning/DefaultConfiguration with etag 00000001-0000-0100-0000-000000000002,
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,Incremented work counter to 6 because: PUT Raven/Versioning/DefaultConfiguration,
+2013-05-24 17:38:32.2805,Raven.Database.DocumentDatabase,Debug,FaceInfo,Successfully executed 1 commands in 00:00:00.0030886,
+2013-05-24 17:38:32.2805,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:38:32.2805,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 6, for: Sql Replication, will wait for additional work",
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 6, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 6, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Found a total of 1 documents that requires indexing since etag: 00000001-0000-0100-0000-000000000001: (Raven/Versioning/DefaultConfiguration),
+2013-05-24 17:38:32.2805,Raven.Database.Impl.DocumentRetriever,Debug,,Trigger Raven.Database.Plugins.Builtins.FilterRavenInternalDocumentsReadTrigger asked us to ignore Raven/Versioning/DefaultConfiguration,
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After read triggers executed, 1 documents remained",
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,FaceInfo,"Going to index 1 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000001-0000-0100-0000-000000000001: (Raven/Versioning/DefaultConfiguration)",
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,FaceInfo,"Going to index 1 documents in IndexName: Raven/DocumentsByExpirationDate, LastIndexedEtag: 00000001-0000-0100-0000-000000000001: (Raven/Versioning/DefaultConfiguration)",
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByExpirationDate. (Raven/Versioning/DefaultConfiguration),
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 0 documents for Raven/DocumentsByExpirationDate,
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByEntityName. (Raven/Versioning/DefaultConfiguration),
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0100-0000-000000000002 for Raven/DocumentsByExpirationDate",
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 0 documents for Raven/DocumentsByEntityName,
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0100-0000-000000000002 for Raven/DocumentsByEntityName",
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 7 because: WORK BY IndexingExecuter,
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 7, for: Sql Replication, will wait for additional work",
+2013-05-24 17:38:32.2805,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:38:32.2805,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 7, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 7, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:38:32.2805,Raven.Database.Server.HttpServer,Debug,,Request # 147: POST    -     4 ms - FaceInfo   - 200 - /bulk_docs,
+2013-05-24 17:38:32.2805,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 7, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:38:32.2805,Raven.Database.Server.HttpServer,Debug,,"	PUT Raven/Versioning/DefaultConfiguration
+",
+2013-05-24 17:38:32.4005,Raven.Database.Server.HttpServer,Debug,,Request # 148: GET     -     0 ms - <system>   - 200 - /changes/config?id=1/PoKL8&command=unwatch-docs&noCache=-486876095,
+2013-05-24 17:38:32.4005,Raven.Database.Server.HttpServer,Debug,,Request # 149: GET     -     0 ms - <system>   - 200 - /changes/config?id=1/PoKL8&command=unwatch-indexes&noCache=-1556458741,
+2013-05-24 17:38:32.4085,Raven.Database.Server.HttpServer,Debug,,Request # 150: GET     -     8 ms - <system>   - 200 - /changes/config?id=1/PoKL8&command=disconnect&noCache=1853321046,
+2013-05-24 17:38:32.4185,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Databases/FaceInfo' was found,
+2013-05-24 17:38:32.4185,Raven.Database.Server.HttpServer,Debug,,Request # 151: GET     -     0 ms - FaceInfo   - 200 - /silverlight/ensureStartup?noCache=735410404,
+2013-05-24 17:38:32.4185,Raven.Database.Server.HttpServer,Debug,,Request # 152: GET     -     1 ms - <system>   - 200 - /docs/Raven/Databases/FaceInfo?noCache=1428328513,
+2013-05-24 17:38:32.4185,Raven.Database.Server.HttpServer,Debug,FaceInfo,Request # 153: GET     -     4 ms - FaceInfo   - 200 - /changes/events?id=2/ya4Dw,
+2013-05-24 17:38:32.4785,Raven.Database.Server.HttpServer,Debug,,Request # 154: GET     -    53 ms - FaceInfo   - 200 - /stats?noCache=-1280093528,
+2013-05-24 17:38:32.5345,Raven.Database.Server.HttpServer,Debug,,Request # 155: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=2/ya4Dw&command=watch-docs&noCache=2135497559,
+2013-05-24 17:38:32.5345,Raven.Database.Server.HttpServer,Debug,,Request # 156: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=2/ya4Dw&command=watch-indexes&noCache=-599708105,
+2013-05-24 17:38:32.5455,Raven.Database.Server.HttpServer,Debug,,Request # 157: GET     -     0 ms - <system>   - 200 - /changes/config?id=1/PoKL8&command=unwatch-indexes&noCache=598401168,
+2013-05-24 17:38:32.5455,Raven.Database.Server.HttpServer,Debug,,Request # 158: GET     -     0 ms - <system>   - 200 - /changes/config?id=1/PoKL8&command=disconnect&noCache=1922736714,
+2013-05-24 17:38:32.6235,Raven.Database.Server.HttpServer,Debug,,Request # 159: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=2/ya4Dw&command=watch-indexes&noCache=-813743095,
+2013-05-24 17:38:32.6505,Raven.Database.Server.HttpServer,Debug,,Request # 160: GET     -     0 ms - <system>   - 200 - /changes/config?id=1/PoKL8&command=disconnect&noCache=685526944,
+2013-05-24 17:39:01.7442,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/Columns/AllDocuments' was not found,
+2013-05-24 17:39:01.7442,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:39:01.7442,Raven.Database.Server.HttpServer,Debug,,Request # 161: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Studio/Columns/AllDocuments?noCache=1161469277,
+2013-05-24 17:39:01.7442,Raven.Database.Server.HttpServer,Debug,,Request # 162: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-1262695479,
+2013-05-24 17:39:01.7812,Raven.Database.Server.HttpServer,Debug,,Request # 163: GET     -     6 ms - FaceInfo   - 200 - /docs/?start=0&pageSize=30&noCache=-1905198006,
+2013-05-24 17:39:01.7812,Raven.Database.Server.HttpServer,Debug,,Request # 164: GET     -    11 ms - FaceInfo   - 200 - /stats?noCache=-1855937734,
+2013-05-24 17:39:02.2932,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:39:02.2932,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 7, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:39:21.7013,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Databases/FaceInfo' was found,
+2013-05-24 17:39:21.7013,Raven.Database.Server.HttpServer,Debug,,Request # 165: GET     -     1 ms - <system>   - 200 - /admin/databases/FaceInfo,
+2013-05-24 17:39:21.7403,Raven.Database.Server.HttpServer,Debug,,Request # 166: GET     -     0 ms - <system>   - 200 - /license/status?noCache=-41394397,
+2013-05-24 17:39:21.7613,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:39:21.7613,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Backup/Periodic/Setup' was not found,
+2013-05-24 17:39:21.7613,Raven.Database.Server.HttpServer,Debug,,Request # 167: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Backup/Periodic/Setup?noCache=-430150472,
+2013-05-24 17:39:21.7613,Raven.Database.Server.HttpServer,Debug,,Request # 169: GET     -     3 ms - FaceInfo   - 404 - /docs/Raven/Replication/Destinations?noCache=802450609,
+2013-05-24 17:39:21.7613,Raven.Database.Server.HttpServer,Debug,,Request # 170: GET     -     0 ms - FaceInfo   - 200 - /docs?startsWith=Raven%2FSqlReplication%2FConfiguration%2F&start=0&pageSize=25&noCache=-767929087,
+2013-05-24 17:39:21.7773,Raven.Database.Server.HttpServer,Debug,,Request # 172: GET     -     3 ms - <system>   - 200 - /plugins/status?noCache=-1296415465,
+2013-05-24 17:39:21.7613,Raven.Database.Server.HttpServer,Debug,,Request # 171: GET     -     0 ms - FaceInfo   - 200 - /docs?startsWith=Raven%2FVersioning&start=0&pageSize=25&noCache=1656002274,
+2013-05-24 17:39:21.7613,Raven.Database.Server.HttpServer,Debug,,Request # 168: GET     -    19 ms - FaceInfo   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=1473045586,
+2013-05-24 17:39:54.4552,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:39:54.4552,Raven.Database.Server.HttpServer,Debug,,Request # 173: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Replication/Destinations?noCache=326542891,
+2013-05-24 17:39:54.4552,Raven.Database.Server.HttpServer,Debug,,Request # 174: GET     -     1 ms - FaceInfo   - 200 - /docs?startsWith=Raven%2FSqlReplication%2FConfiguration%2F&start=0&pageSize=25&noCache=-1874060357,
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was found,
+2013-05-24 17:39:54.4752,Raven.Database.DocumentDatabase,Debug,FaceInfo,Delete a document with key: Raven/Quotas/Documents and etag ,
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Quotas/Documents' was not found,
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Quotas/Documents' was not found,
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Quotas/Documents' was not found,
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,"Document with key 'Raven/Quotas/Documents' was not found, and considered deleted",
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was found,
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was found,
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,"Inserted a new document with key 'Raven/Databases/FaceInfo', update: True, ",
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,"Inserted a new document with key 'Raven/Versioning/DefaultConfiguration', update: True, ",
+2013-05-24 17:39:54.4752,Raven.Database.DocumentDatabase,Debug,FaceInfo,Put document Raven/Versioning/DefaultConfiguration with etag 00000001-0000-0100-0000-000000000003,
+2013-05-24 17:39:54.4752,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"Incremented work counter to 8 because: DEL Raven/Quotas/Documents, PUT Raven/Versioning/DefaultConfiguration",
+2013-05-24 17:39:54.4752,Raven.Database.DocumentDatabase,Debug,FaceInfo,Successfully executed 1 commands in 00:00:00.0084048,
+2013-05-24 17:39:54.4752,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Found a total of 1 documents that requires indexing since etag: 00000001-0000-0100-0000-000000000002: (Raven/Versioning/DefaultConfiguration),
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:39:54.4752,Raven.Database.Impl.DocumentRetriever,Debug,,Trigger Raven.Database.Plugins.Builtins.FilterRavenInternalDocumentsReadTrigger asked us to ignore Raven/Versioning/DefaultConfiguration,
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:39:54.4752,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 8, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:39:54.4752,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After read triggers executed, 1 documents remained",
+2013-05-24 17:39:54.4752,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 8, for: Sql Replication, will wait for additional work",
+2013-05-24 17:39:54.4752,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,FaceInfo,"Going to index 1 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000001-0000-0100-0000-000000000002: (Raven/Versioning/DefaultConfiguration)",
+2013-05-24 17:39:54.4752,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,FaceInfo,"Going to index 1 documents in IndexName: Raven/DocumentsByExpirationDate, LastIndexedEtag: 00000001-0000-0100-0000-000000000002: (Raven/Versioning/DefaultConfiguration)",
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was found,
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was found,
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was found,
+2013-05-24 17:39:54.4752,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByEntityName. (Raven/Versioning/DefaultConfiguration),
+2013-05-24 17:39:54.4752,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,"Inserted a new document with key 'Raven/Versioning/DefaultConfiguration', update: True, ",
+2013-05-24 17:39:54.4752,Raven.Database.DocumentDatabase,Debug,FaceInfo,Put document Raven/Versioning/DefaultConfiguration with etag 00000001-0000-0100-0000-000000000004,
+2013-05-24 17:39:54.4752,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 0 documents for Raven/DocumentsByEntityName,
+2013-05-24 17:39:54.4752,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,Incremented work counter to 9 because: PUT Raven/Versioning/DefaultConfiguration,
+2013-05-24 17:39:54.4752,Raven.Database.DocumentDatabase,Debug,FaceInfo,Successfully executed 1 commands in 00:00:00.0013909,
+2013-05-24 17:39:54.4752,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 9, for: Sql Replication, will wait for additional work",
+2013-05-24 17:39:54.4752,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByExpirationDate. (Raven/Versioning/DefaultConfiguration),
+2013-05-24 17:39:54.4752,Raven.Database.Server.HttpServer,Debug,,Request # 175: POST    -     9 ms - FaceInfo   - 200 - /bulk_docs,
+2013-05-24 17:39:54.4902,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:39:54.4902,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:39:54.4902,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 9, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:39:54.4902,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 0 documents for Raven/DocumentsByExpirationDate,
+2013-05-24 17:39:54.4752,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0100-0000-000000000003 for Raven/DocumentsByEntityName",
+2013-05-24 17:39:54.4902,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0100-0000-000000000003 for Raven/DocumentsByExpirationDate",
+2013-05-24 17:39:54.4902,Raven.Database.Indexing.WorkContext,Debug,<system>,Stopping background workers,
+2013-05-24 17:39:54.4902,Raven.Database.Server.HttpServer,Debug,,Request # 176: POST    -     7 ms - FaceInfo   - 200 - /bulk_docs,
+2013-05-24 17:39:54.4902,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was found,
+2013-05-24 17:39:54.4902,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was found,
+2013-05-24 17:39:54.4902,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was found,
+2013-05-24 17:39:54.4902,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,"Inserted a new document with key 'Raven/Versioning/DefaultConfiguration', update: True, ",
+2013-05-24 17:39:54.4902,Raven.Database.DocumentDatabase,Debug,FaceInfo,Put document Raven/Versioning/DefaultConfiguration with etag 00000001-0000-0100-0000-000000000005,
+2013-05-24 17:39:54.4902,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:39:54.4902,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:39:54.4902,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:39:54.5062,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,"Inserted a new document with key 'Raven/Replication/Destinations', update: False, ",
+2013-05-24 17:39:54.5062,Raven.Database.DocumentDatabase,Debug,FaceInfo,Put document Raven/Replication/Destinations with etag 00000001-0000-0100-0000-000000000006,
+2013-05-24 17:39:54.4902,Raven.Database.Server.HttpServer,Debug,,"	PUT Raven/Versioning/DefaultConfiguration
+",
+2013-05-24 17:39:54.5062,Raven.Database.DocumentDatabase,Debug,FaceInfo,Successfully executed 2 commands in 00:00:00.0115391,
+2013-05-24 17:39:54.4902,Raven.Database.Server.HttpServer,Debug,,"	PUT Raven/Versioning/DefaultConfiguration
+",
+2013-05-24 17:39:54.5062,Raven.Database.Server.HttpServer,Debug,,Request # 177: POST    -    28 ms - FaceInfo   - 200 - /bulk_docs,
+2013-05-24 17:39:54.5062,Raven.Database.Server.HttpServer,Debug,,"	PUT Raven/Versioning/DefaultConfiguration
+	PUT Raven/Replication/Destinations
+",
+2013-05-24 17:39:54.5382,Raven.Database.Server.HttpServer,Debug,,Request # 178: GET     -    19 ms - FaceInfo   - 200 - /stats?noCache=-1563592835,
+2013-05-24 17:39:54.5382,Raven.Database.Indexing.WorkContext,Debug,<system>,Incremented work counter to 13 because: PUT Raven/Databases/FaceInfo,
+2013-05-24 17:39:54.5382,Raven.Database.DocumentDatabase,Debug,<system>,Put document Raven/Databases/FaceInfo with etag 00000001-0000-0200-0000-000000000007,
+2013-05-24 17:39:54.5382,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Found a total of 1 documents that requires indexing since etag: 00000001-0000-0200-0000-000000000006: (Raven/Databases/FaceInfo),
+2013-05-24 17:39:54.5382,Raven.Database.Impl.DocumentRetriever,Debug,,Trigger Raven.Database.Plugins.Builtins.FilterRavenInternalDocumentsReadTrigger asked us to ignore Raven/Databases/FaceInfo,
+2013-05-24 17:39:54.5382,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 13, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:39:54.5382,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After read triggers executed, 1 documents remained",
+2013-05-24 17:39:54.5382,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,<system>,"Going to index 1 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000001-0000-0200-0000-000000000006: (Raven/Databases/FaceInfo)",
+2013-05-24 17:39:54.5382,Raven.Database.Server.HttpServer,Debug,,Request # 179: PUT     -    75 ms - <system>   - 200 - /admin/databases/FaceInfo,
+2013-05-24 17:39:54.5382,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByEntityName. (Raven/Databases/FaceInfo),
+2013-05-24 17:39:54.5522,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 0 documents for Raven/DocumentsByEntityName,
+2013-05-24 17:39:54.5522,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0200-0000-000000000007 for Raven/DocumentsByEntityName",
+2013-05-24 17:39:54.5522,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 14 because: WORK BY IndexingExecuter,
+2013-05-24 17:39:54.5522,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 14, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:39:54.5522,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 14, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:39:56.5123,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Databases/FaceInfo' was found,
+2013-05-24 17:39:56.6353,Raven.Database.Impl.DocumentCacher,Info,FaceInfo,"MemoryCache Settings:
+  PhysicalMemoryLimit = 99
+  CacheMemoryLimit    = 3205496832
+  PollingInterval     = 00:02:00",
+2013-05-24 17:39:56.6353,Raven.Storage.Esent.TransactionalStorage,Info,FaceInfo,"Esent Settings:
+  MaxVerPages      = 16384
+  CacheSizeMax     = 262144
+  DatabasePageSize = 4096",
+2013-05-24 17:39:56.9043,Raven.Database.Storage.IndexDefinitionStorage,Info,FaceInfo,"New index Raven%2fDocumentsByEntityName:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByEntityName : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByEntityName()
+	{
+		this.ViewText = @""from doc in docs 
+let Tag = doc[""""@metadata""""][""""Raven-Entity-Name""""]
+select new { Tag, LastModified = (DateTime)doc[""""@metadata""""][""""Last-Modified""""] };"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let Tag = doc[""@metadata""][""Raven-Entity-Name""]
+			select new {
+				Tag,
+				LastModified = (DateTime)doc[""@metadata""][""Last-Modified""],
+				__document_id = doc.__document_id
+			});
+		this.AddField(""LastModified"");
+		this.AddField(""__document_id"");
+		this.AddField(""Tag"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+
+Compiled to:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByEntityName : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByEntityName()
+	{
+		this.ViewText = @""from doc in docs 
+let Tag = doc[""""@metadata""""][""""Raven-Entity-Name""""]
+select new { Tag, LastModified = (DateTime)doc[""""@metadata""""][""""Last-Modified""""] };"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let Tag = doc[""@metadata""][""Raven-Entity-Name""]
+			select new {
+				Tag,
+				LastModified = (DateTime)doc[""@metadata""][""Last-Modified""],
+				__document_id = doc.__document_id
+			});
+		this.AddField(""LastModified"");
+		this.AddField(""__document_id"");
+		this.AddField(""Tag"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+",
+2013-05-24 17:39:56.9043,Raven.Database.Storage.IndexDefinitionStorage,Info,FaceInfo,"New index Raven%2fDocumentsByExpirationDate:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByExpirationDate : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByExpirationDate()
+	{
+		this.ViewText = @""
+	from doc in docs
+	let expiry = doc[""""@metadata""""][""""Raven-Expiration-Date""""]
+	where expiry != null
+	select new { Expiry = expiry }
+"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let expiry = doc[""@metadata""][""Raven-Expiration-Date""]
+			where expiry != null
+			select new {
+				Expiry = expiry,
+				__document_id = doc.__document_id
+			});
+		this.AddField(""Expiry"");
+		this.AddField(""__document_id"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+
+Compiled to:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByExpirationDate : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByExpirationDate()
+	{
+		this.ViewText = @""
+	from doc in docs
+	let expiry = doc[""""@metadata""""][""""Raven-Expiration-Date""""]
+	where expiry != null
+	select new { Expiry = expiry }
+"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let expiry = doc[""@metadata""][""Raven-Expiration-Date""]
+			where expiry != null
+			select new {
+				Expiry = expiry,
+				__document_id = doc.__document_id
+			});
+		this.AddField(""Expiry"");
+		this.AddField(""__document_id"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+",
+2013-05-24 17:39:56.9043,Raven.Database.Indexing.IndexStorage.Startup,Debug,,Loading saved index Raven/DocumentsByEntityName,
+2013-05-24 17:39:56.9043,Raven.Database.Indexing.IndexStorage.Startup,Debug,,Loading saved index Raven/DocumentsByExpirationDate,
+2013-05-24 17:39:56.9083,Raven.Database.Indexing.Index.Indexing,Debug,,Creating index for Raven/DocumentsByExpirationDate,
+2013-05-24 17:39:56.9293,Raven.Database.Indexing.Index.Indexing,Debug,,Creating index for Raven/DocumentsByEntityName,
+2013-05-24 17:39:56.9293,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Encryption/Verification' was found,
+2013-05-24 17:39:56.9493,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Backup/Periodic/Setup' was not found,
+2013-05-24 17:39:56.9493,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Backup/Status' was not found,
+2013-05-24 17:39:56.9493,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/SqlReplication/Status' was not found,
+2013-05-24 17:39:56.9493,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 0, for: Sql Replication, will wait for additional work",
+2013-05-24 17:39:56.9493,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 17:39:56.9553,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 0, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:39:56.9553,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 17:39:56.9553,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 0, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:39:56.9553,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,FaceInfo,"Found a total of 2 documents that requires indexing since etag: 00000001-0000-0100-0000-000000000003: (Raven/Versioning/DefaultConfiguration, Raven/Replication/Destinations)",
+2013-05-24 17:39:56.9553,Raven.Database.Impl.DocumentRetriever,Debug,,Trigger Raven.Database.Plugins.Builtins.FilterRavenInternalDocumentsReadTrigger asked us to ignore Raven/Versioning/DefaultConfiguration,
+2013-05-24 17:39:56.9553,Raven.Database.Impl.DocumentRetriever,Debug,,Trigger Raven.Database.Plugins.Builtins.FilterRavenInternalDocumentsReadTrigger asked us to ignore Raven/Replication/Destinations,
+2013-05-24 17:39:56.9553,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,FaceInfo,"After read triggers executed, 2 documents remained",
+2013-05-24 17:39:56.9553,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,FaceInfo,"Going to index 2 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000001-0000-0100-0000-000000000003: (Raven/Versioning/DefaultConfiguration, Raven/Replication/Destinations)",
+2013-05-24 17:39:56.9553,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,FaceInfo,"Going to index 2 documents in IndexName: Raven/DocumentsByExpirationDate, LastIndexedEtag: 00000001-0000-0100-0000-000000000003: (Raven/Versioning/DefaultConfiguration, Raven/Replication/Destinations)",
+2013-05-24 17:39:56.9703,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"Indexing 2 documents for index: Raven/DocumentsByEntityName. (Raven/Versioning/DefaultConfiguration,Raven/Replication/Destinations)",
+2013-05-24 17:39:56.9703,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"Indexing 2 documents for index: Raven/DocumentsByExpirationDate. (Raven/Versioning/DefaultConfiguration,Raven/Replication/Destinations)",
+2013-05-24 17:39:56.9703,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 0 documents for Raven/DocumentsByEntityName,
+2013-05-24 17:39:56.9703,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 0 documents for Raven/DocumentsByExpirationDate,
+2013-05-24 17:39:56.9703,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 2 documents, the new last etag for is: 00000001-0000-0100-0000-000000000006 for Raven/DocumentsByEntityName",
+2013-05-24 17:39:56.9703,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 2 documents, the new last etag for is: 00000001-0000-0100-0000-000000000006 for Raven/DocumentsByExpirationDate",
+2013-05-24 17:39:56.9703,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 1 because: WORK BY IndexingExecuter,
+2013-05-24 17:39:56.9703,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 1, for: Sql Replication, will wait for additional work",
+2013-05-24 17:39:56.9703,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 1, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:39:56.9703,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 17:39:56.9703,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 17:39:56.9703,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 1, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:39:56.9703,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 1, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:39:57.2814,Raven.Database.Server.HttpServer,Debug,,Request # 180: GET     -   770 ms - FaceInfo   - 200 - /stats?noCache=1975898632,
+2013-05-24 17:40:02.5027,Raven.Database.Server.HttpServer,Debug,,Request # 181: GET     -     8 ms - FaceInfo   - 200 - /stats?noCache=-199658502,
+2013-05-24 17:40:10.3401,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:40:10.3401,Raven.Database.Server.HttpServer,Debug,,Request # 182: GET     -     1 ms - FaceInfo   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-1464605023,
+2013-05-24 17:40:10.3851,Raven.Database.Server.HttpServer,Debug,,Request # 183: GET     -     1 ms - FaceInfo   - 200 - /docs/?start=0&pageSize=30&noCache=1647360967,
+2013-05-24 17:40:10.3911,Raven.Database.Server.HttpServer,Debug,,Request # 184: GET     -    10 ms - FaceInfo   - 200 - /stats?noCache=1275834002,
+2013-05-24 17:40:26.9841,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 17:40:26.9841,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 1, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:40:59.9589,Raven.Database.Server.HttpServer,Debug,,Request # 185: GET     -     2 ms - FaceInfo   - 200 - /changes/config?id=2/ya4Dw&command=unwatch-docs&noCache=103549479,
+2013-05-24 17:40:59.9589,Raven.Database.Server.HttpServer,Debug,,Request # 186: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=2/ya4Dw&command=unwatch-indexes&noCache=-1408599028,
+2013-05-24 17:40:59.9669,Raven.Database.Server.HttpServer,Debug,,Request # 187: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=2/ya4Dw&command=disconnect&noCache=-307828976,
+2013-05-24 17:40:59.9959,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Databases/<system>' was not found,
+2013-05-24 17:40:59.9669,Raven.Database.Server.HttpServer,Debug,,Request # 188: GET     -     0 ms - <system>   - 200 - /silverlight/ensureStartup?noCache=616496020,
+2013-05-24 17:40:59.9939,Raven.Database.Server.HttpServer,Debug,,Request # 189: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=2/ya4Dw&command=disconnect&noCache=-60362490,
+2013-05-24 17:40:59.9959,Raven.Database.Server.HttpServer,Debug,,Request # 191: GET     -     8 ms - <system>   - 404 - /docs/Raven/Databases/%3Csystem%3E?noCache=1147672929,
+2013-05-24 17:41:00.0189,Raven.Database.Server.HttpServer,Debug,,Request # 192: GET     -    33 ms - <system>   - 200 - /stats?noCache=1834149395,
+2013-05-24 17:41:00.0189,Raven.Database.Server.HttpServer,Debug,,Request # 195: GET     -     2 ms - FaceInfo   - 200 - /changes/config?id=2/ya4Dw&command=unwatch-indexes&noCache=-1017175369,
+2013-05-24 17:40:59.9939,Raven.Database.Server.HttpServer,Debug,<system>,Request # 190: GET     -     0 ms - <system>   - 200 - /changes/events?id=3/18XwLo,
+2013-05-24 17:41:00.0189,Raven.Database.Server.HttpServer,Debug,,Request # 194: GET     -     0 ms - <system>   - 200 - /changes/config?id=3/18XwLo&command=watch-docs&noCache=1088663379,
+2013-05-24 17:41:00.0369,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:41:00.0189,Raven.Database.Server.HttpServer,Debug,,Request # 193: GET     -     0 ms - <system>   - 200 - /changes/config?id=3/18XwLo&command=watch-indexes&noCache=-1311640217,
+2013-05-24 17:41:00.0369,Raven.Database.Server.HttpServer,Debug,,Request # 196: GET     -     0 ms - <system>   - 200 - /changes/config?id=3/18XwLo&command=watch-docs&noCache=1608972684,
+2013-05-24 17:41:00.0369,Raven.Database.Server.HttpServer,Debug,,Request # 197: GET     -     3 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=1559773995,
+2013-05-24 17:41:00.0910,Raven.Database.Server.HttpServer,Debug,,Request # 198: GET     -     4 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=-307167180,
+2013-05-24 17:41:00.0910,Raven.Database.Server.HttpServer,Debug,,Request # 199: GET     -     9 ms - <system>   - 200 - /stats?noCache=663219483,
+2013-05-24 17:41:02.5641,Raven.Database.Server.HttpServer,Debug,,Error when using events transport,"System.AggregateException: One or more errors occurred. ---> System.Net.HttpListenerException: An operation was attempted on a nonexistent network connection
+   at System.Net.HttpResponseStream.BeginWrite(Byte[] buffer, Int32 offset, Int32 size, AsyncCallback callback, Object state)
+   at Raven.Database.Server.Abstractions.HttpListenerResponseAdapter.<>c__DisplayClass3.<WriteAsync>b__1(AsyncCallback callback, Object state) in c:\Builds\RavenDB-Stable\Raven.Database\Server\Abstractions\HttpListenerResponseAdapter.cs:line 116
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncImpl(Func`3 beginMethod, Func`2 endFunction, Action`1 endAction, Object state, TaskCreationOptions creationOptions)
+   at System.Threading.Tasks.TaskFactory.FromAsync(Func`3 beginMethod, Action`1 endMethod, Object state, TaskCreationOptions creationOptions)
+   at Raven.Database.Server.Abstractions.HttpListenerResponseAdapter.WriteAsync(String data) in c:\Builds\RavenDB-Stable\Raven.Database\Server\Abstractions\HttpListenerResponseAdapter.cs:line 115
+   --- End of inner exception stack trace ---
+---> (Inner Exception #0) System.Net.HttpListenerException (0x80004005): An operation was attempted on a nonexistent network connection
+   at System.Net.HttpResponseStream.BeginWrite(Byte[] buffer, Int32 offset, Int32 size, AsyncCallback callback, Object state)
+   at Raven.Database.Server.Abstractions.HttpListenerResponseAdapter.<>c__DisplayClass3.<WriteAsync>b__1(AsyncCallback callback, Object state) in c:\Builds\RavenDB-Stable\Raven.Database\Server\Abstractions\HttpListenerResponseAdapter.cs:line 116
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncImpl(Func`3 beginMethod, Func`2 endFunction, Action`1 endAction, Object state, TaskCreationOptions creationOptions)
+   at System.Threading.Tasks.TaskFactory.FromAsync(Func`3 beginMethod, Action`1 endMethod, Object state, TaskCreationOptions creationOptions)
+   at Raven.Database.Server.Abstractions.HttpListenerResponseAdapter.WriteAsync(String data) in c:\Builds\RavenDB-Stable\Raven.Database\Server\Abstractions\HttpListenerResponseAdapter.cs:line 115<---
+"
+2013-05-24 17:41:20.6411,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Replication/Destinations' was not found,
+2013-05-24 17:41:20.6411,Raven.Database.Server.HttpServer,Debug,,Request # 200: GET     -     1 ms - <system>   - 404 - /docs/Raven/Replication/Destinations,
+2013-05-24 17:42:14.0882,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Hilo/DetectFaceInfos' was found,
+2013-05-24 17:42:14.0882,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/ServerPrefixForHilo' was not found,
+2013-05-24 17:42:14.0882,Raven.Database.Server.HttpServer,Debug,,Request # 201: GET     -     2 ms - <system>   - 200 - /queries/?&id=Raven/Hilo/DetectFaceInfos&id=Raven/ServerPrefixForHilo,
+2013-05-24 17:42:14.1852,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,"Inserted a new document with key 'Raven/Hilo/DetectFaceInfos', update: True, ",
+2013-05-24 17:42:14.1852,Raven.Database.Indexing.WorkContext,Debug,<system>,Incremented work counter to 15 because: PUT Raven/Hilo/DetectFaceInfos,
+2013-05-24 17:42:14.1852,Raven.Database.DocumentDatabase,Debug,<system>,Put document Raven/Hilo/DetectFaceInfos with etag 00000001-0000-0200-0000-000000000008,
+2013-05-24 17:42:14.1852,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Found a total of 1 documents that requires indexing since etag: 00000001-0000-0200-0000-000000000007: (Raven/Hilo/DetectFaceInfos),
+2013-05-24 17:42:14.1852,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 15, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:42:14.1852,Raven.Database.Impl.DocumentRetriever,Debug,,Trigger Raven.Database.Plugins.Builtins.FilterRavenInternalDocumentsReadTrigger asked us to ignore Raven/Hilo/DetectFaceInfos,
+2013-05-24 17:42:14.1852,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After read triggers executed, 1 documents remained",
+2013-05-24 17:42:14.1852,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,<system>,"Going to index 1 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000001-0000-0200-0000-000000000007: (Raven/Hilo/DetectFaceInfos)",
+2013-05-24 17:42:14.1852,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByEntityName. (Raven/Hilo/DetectFaceInfos),
+2013-05-24 17:42:14.1852,Raven.Database.Server.HttpServer,Debug,,Request # 202: PUT     -     2 ms - <system>   - 201 - /docs/Raven/Hilo/DetectFaceInfos,
+2013-05-24 17:42:14.1852,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 0 documents for Raven/DocumentsByEntityName,
+2013-05-24 17:42:14.1892,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0200-0000-000000000008 for Raven/DocumentsByEntityName",
+2013-05-24 17:42:14.1892,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 16 because: WORK BY IndexingExecuter,
+2013-05-24 17:42:14.1892,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 16, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:42:14.1892,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 16, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:42:14.2062,Raven.Database.Server.HttpServer,Debug,,Request # 203: GET     -    19 ms - <system>   - 200 - /stats?noCache=372109787,
+2013-05-24 17:42:14.2432,Raven.Database.Server.HttpServer,Debug,,Request # 204: GET     -     5 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=1304631774,
+2013-05-24 17:42:14.2432,Raven.Database.Server.HttpServer,Debug,,Request # 205: GET     -    13 ms - <system>   - 200 - /stats?noCache=-1384619986,
+2013-05-24 17:42:14.4172,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,"Inserted a new document with key 'DetectFaceInfos/33', update: False, ",
+2013-05-24 17:42:14.4172,Raven.Database.DocumentDatabase,Debug,<system>,Put document DetectFaceInfos/33 with etag 00000001-0000-0200-0000-000000000009,
+2013-05-24 17:42:14.4172,Raven.Database.Indexing.WorkContext,Debug,<system>,Incremented work counter to 17 because: PUT DetectFaceInfos/33,
+2013-05-24 17:42:14.4172,Raven.Database.DocumentDatabase,Debug,<system>,Successfully executed 1 commands in 00:00:00.0035088,
+2013-05-24 17:42:14.4172,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Found a total of 1 documents that requires indexing since etag: 00000001-0000-0200-0000-000000000008: (DetectFaceInfos/33),
+2013-05-24 17:42:14.4172,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 17, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:42:14.4172,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After read triggers executed, 1 documents remained",
+2013-05-24 17:42:14.4172,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,<system>,"Going to index 1 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000001-0000-0200-0000-000000000008: (DetectFaceInfos/33)",
+2013-05-24 17:42:14.4172,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByEntityName. (DetectFaceInfos/33),
+2013-05-24 17:42:14.4172,Raven.Database.Server.HttpServer,Debug,,Request # 206: POST    -     4 ms - <system>   - 200 - /bulk_docs,
+2013-05-24 17:42:14.4172,Raven.Database.Indexing.Index.Indexing,Debug,,"Indexing on DetectFaceInfos/33 result in index Raven/DocumentsByEntityName gave document: 	__document_id IS: detectfaceinfos/33
+	Tag I-: DetectFaceInfos
+	LastModified I-: 2013-05-24T09:42:14.4152522Z
+",
+2013-05-24 17:42:14.4172,Raven.Database.Server.HttpServer,Debug,,"	PUT DetectFaceInfos/33
+",
+2013-05-24 17:42:14.4422,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 1 documents for Raven/DocumentsByEntityName,
+2013-05-24 17:42:14.4422,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0200-0000-000000000009 for Raven/DocumentsByEntityName",
+2013-05-24 17:42:14.4422,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 18 because: WORK BY IndexingExecuter,
+2013-05-24 17:42:14.4422,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 18, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:42:14.4422,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 18, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:42:15.2412,Raven.Database.Server.HttpServer,Debug,,Request # 207: GET     -    15 ms - <system>   - 200 - /stats?noCache=1855464341,
+2013-05-24 17:42:15.2412,Raven.Database.Server.HttpServer,Debug,,Request # 208: GET     -     5 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=-1747704863,
+2013-05-24 17:42:16.2003,Raven.Database.Server.HttpServer,Debug,,Request # 209: GET     -    12 ms - <system>   - 200 - /stats?noCache=1024888271,
+2013-05-24 17:42:19.3205,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,"Inserted a new document with key 'DetectFaceInfos/34', update: False, ",
+2013-05-24 17:42:19.3205,Raven.Database.DocumentDatabase,Debug,<system>,Put document DetectFaceInfos/34 with etag 00000001-0000-0200-0000-00000000000a,
+2013-05-24 17:42:19.3215,Raven.Database.Indexing.WorkContext,Debug,<system>,Incremented work counter to 19 because: PUT DetectFaceInfos/34,
+2013-05-24 17:42:19.3215,Raven.Database.DocumentDatabase,Debug,<system>,Successfully executed 1 commands in 00:00:00.0009390,
+2013-05-24 17:42:19.3215,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 19, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:42:19.3215,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Found a total of 1 documents that requires indexing since etag: 00000001-0000-0200-0000-000000000009: (DetectFaceInfos/34),
+2013-05-24 17:42:19.3215,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After read triggers executed, 1 documents remained",
+2013-05-24 17:42:19.3215,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,<system>,"Going to index 1 documents in IndexName: Raven/DocumentsByEntityName, LastIndexedEtag: 00000001-0000-0200-0000-000000000009: (DetectFaceInfos/34)",
+2013-05-24 17:42:19.3215,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,Indexing 1 documents for index: Raven/DocumentsByEntityName. (DetectFaceInfos/34),
+2013-05-24 17:42:19.3215,Raven.Database.Server.HttpServer,Debug,,Request # 210: POST    -     1 ms - <system>   - 200 - /bulk_docs,
+2013-05-24 17:42:19.3215,Raven.Database.Indexing.Index.Indexing,Debug,,"Indexing on DetectFaceInfos/34 result in index Raven/DocumentsByEntityName gave document: 	__document_id IS: detectfaceinfos/34
+	Tag I-: DetectFaceInfos
+	LastModified I-: 2013-05-24T09:42:19.3205327Z
+",
+2013-05-24 17:42:19.3215,Raven.Database.Server.HttpServer,Debug,,"	PUT DetectFaceInfos/34
+",
+2013-05-24 17:42:19.3505,Raven.Database.Indexing.Index.Indexing,Debug,,Indexed 1 documents for Raven/DocumentsByEntityName,
+2013-05-24 17:42:19.3505,Raven.Database.Indexing.AbstractIndexingExecuter,Debug,,"After indexing 1 documents, the new last etag for is: 00000001-0000-0200-0000-00000000000a for Raven/DocumentsByEntityName",
+2013-05-24 17:42:19.3525,Raven.Database.Server.HttpServer,Debug,,Request # 211: GET     -    19 ms - <system>   - 200 - /stats?noCache=1926773363,
+2013-05-24 17:42:19.3525,Raven.Database.Indexing.WorkContext,Debug,,Incremented work counter to 20 because: WORK BY IndexingExecuter,
+2013-05-24 17:42:19.3525,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 20, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:42:19.3525,Raven.Database.Indexing.WorkContext,Debug,,"No work was found, workerWorkCounter: 20, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:42:19.3825,Raven.Database.Server.HttpServer,Debug,,Request # 212: GET     -     5 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=1297777743,
+2013-05-24 17:42:19.3865,Raven.Database.Server.HttpServer,Debug,,Request # 213: GET     -    12 ms - <system>   - 200 - /stats?noCache=-1633966354,
+2013-05-24 17:42:21.3526,Raven.Database.Server.HttpServer,Debug,,Request # 214: GET     -    12 ms - <system>   - 200 - /stats?noCache=1450431963,
+2013-05-24 17:42:51.5903,Raven.Database.Server.HttpServer,Debug,,Request # 215: GET     -     0 ms - <system>   - 200 - /changes/config?id=3/18XwLo&command=unwatch-docs&noCache=155652067,
+2013-05-24 17:42:51.5903,Raven.Database.Server.HttpServer,Debug,,Request # 217: GET     -     0 ms - <system>   - 200 - /changes/config?id=3/18XwLo&command=disconnect&noCache=162526325,
+2013-05-24 17:42:51.5903,Raven.Database.Server.HttpServer,Debug,,Request # 216: GET     -     0 ms - <system>   - 200 - /changes/config?id=3/18XwLo&command=unwatch-indexes&noCache=-1697197257,
+2013-05-24 17:42:51.6103,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:42:51.6103,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Databases/FaceInfo' was found,
+2013-05-24 17:42:51.6103,Raven.Database.Server.HttpServer,Debug,,Request # 218: GET     -     5 ms - FaceInfo   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-1685082815,
+2013-05-24 17:42:51.6103,Raven.Database.Server.HttpServer,Debug,,Request # 219: GET     -     2 ms - <system>   - 200 - /docs/Raven/Databases/FaceInfo?noCache=962297834,
+2013-05-24 17:42:51.6143,Raven.Database.Server.HttpServer,Debug,FaceInfo,Request # 220: GET     -     7 ms - FaceInfo   - 200 - /changes/events?id=4/qAPGj,
+2013-05-24 17:42:51.6143,Raven.Database.Server.HttpServer,Debug,,Request # 221: GET     -     0 ms - FaceInfo   - 200 - /silverlight/ensureStartup?noCache=2053312374,
+2013-05-24 17:42:51.6693,Raven.Database.Server.HttpServer,Debug,,Request # 222: GET     -    43 ms - FaceInfo   - 200 - /stats?noCache=440082482,
+2013-05-24 17:42:51.6693,Raven.Database.Server.HttpServer,Debug,,Request # 223: GET     -     9 ms - FaceInfo   - 200 - /docs/?start=0&pageSize=30&noCache=-229794024,
+2013-05-24 17:42:51.6923,Raven.Database.Server.HttpServer,Debug,,Request # 224: GET     -    27 ms - FaceInfo   - 200 - /stats?noCache=-929115241,
+2013-05-24 17:42:51.7393,Raven.Database.Server.HttpServer,Debug,,Request # 225: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=4/qAPGj&command=watch-docs&noCache=-2073029418,
+2013-05-24 17:42:51.7393,Raven.Database.Server.HttpServer,Debug,,Request # 226: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=4/qAPGj&command=watch-indexes&noCache=1273934359,
+2013-05-24 17:42:51.7393,Raven.Database.Server.HttpServer,Debug,,Request # 227: GET     -     0 ms - <system>   - 200 - /changes/config?id=3/18XwLo&command=unwatch-indexes&noCache=-1631719483,
+2013-05-24 17:42:51.7393,Raven.Database.Server.HttpServer,Debug,,Request # 228: GET     -     0 ms - <system>   - 200 - /changes/config?id=3/18XwLo&command=disconnect&noCache=-1847252002,
+2013-05-24 17:42:51.8493,Raven.Database.Server.HttpServer,Debug,,Request # 229: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=4/qAPGj&command=watch-indexes&noCache=2116262084,
+2013-05-24 17:42:51.8493,Raven.Database.Server.HttpServer,Debug,,Request # 230: GET     -     0 ms - <system>   - 200 - /changes/config?id=3/18XwLo&command=disconnect&noCache=-1324764869,
+2013-05-24 17:42:54.6785,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 17:42:54.6785,Raven.Database.Server.HttpServer,Debug,,Request # 231: GET     -     1 ms - FaceInfo   - 200 - /docs/Raven/Replication/Destinations?noCache=-514581637,
+2013-05-24 17:42:54.8725,Raven.Database.Server.HttpServer,Debug,,Request # 232: GET     -     2 ms - FaceInfo   - 200 - /docs?startsWith=Raven%2FReplication%2FDestinations%2F&start=0&pageSize=15&noCache=1876241063,
+2013-05-24 17:42:54.8775,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication' was not found,
+2013-05-24 17:42:54.8775,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven' was not found,
+2013-05-24 17:42:54.8775,Raven.Database.Server.HttpServer,Debug,,Request # 233: GET     -     1 ms - FaceInfo   - 200 - /queries/?metadata-only=true&&id=Raven/Replication&id=Raven&noCache=26365589,
+2013-05-24 17:43:04.2691,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/Columns/Default' was not found,
+2013-05-24 17:43:04.2691,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:43:04.2691,Raven.Database.Server.HttpServer,Debug,,Request # 234: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Studio/Columns/Default?noCache=1039956582,
+2013-05-24 17:43:04.2691,Raven.Database.Server.HttpServer,Debug,,Request # 235: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=897596622,
+2013-05-24 17:43:04.2851,Raven.Database.Server.HttpServer,Debug,,Request # 236: GET     -    20 ms - FaceInfo   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=-150209479,
+2013-05-24 17:43:07.7113,Raven.Database.Server.HttpServer,Debug,,Request # 237: GET     -    21 ms - FaceInfo   - 200 - /indexes/Raven/DocumentsByEntityName?definition=yes&noCache=-2137236595,
+2013-05-24 17:43:07.7733,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:43:07.7733,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/Columns/Index/Raven/DocumentsByEntityName' was not found,
+2013-05-24 17:43:07.7733,Raven.Database.Server.HttpServer,Debug,,Request # 238: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=1371347114,
+2013-05-24 17:43:07.7733,Raven.Database.Server.HttpServer,Debug,,Request # 239: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Studio/Columns/Index/Raven/DocumentsByEntityName?noCache=1979235195,
+2013-05-24 17:43:11.3975,Raven.Database.Server.HttpServer,Debug,,Request # 240: GET     -     0 ms - FaceInfo   - 200 - /indexes/Raven/DocumentsByExpirationDate?definition=yes&noCache=471613192,
+2013-05-24 17:43:11.4865,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:43:11.4865,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/Columns/Index/Raven/DocumentsByExpirationDate' was not found,
+2013-05-24 17:43:11.4865,Raven.Database.Server.HttpServer,Debug,,Request # 241: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=1080933878,
+2013-05-24 17:43:11.4865,Raven.Database.Server.HttpServer,Debug,,Request # 242: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Studio/Columns/Index/Raven/DocumentsByExpirationDate?noCache=1213582436,
+2013-05-24 17:43:20.4600,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:43:20.4600,Raven.Database.Server.HttpServer,Debug,,Request # 243: GET     -     3 ms - FaceInfo   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-748494263,
+2013-05-24 17:43:20.5050,Raven.Database.Server.HttpServer,Debug,,Request # 244: GET     -     3 ms - FaceInfo   - 200 - /docs/?start=0&pageSize=30&noCache=-841960361,
+2013-05-24 17:43:20.5280,Raven.Database.Server.HttpServer,Debug,,Request # 245: GET     -    13 ms - FaceInfo   - 200 - /stats?noCache=-1523715370,
+2013-05-24 17:43:27.6634,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was found,
+2013-05-24 17:43:27.6634,Raven.Database.Server.HttpServer,Debug,,Request # 246: GET     -     1 ms - FaceInfo   - 200 - /docs/Raven/Versioning/DefaultConfiguration?noCache=-337411229,
+2013-05-24 17:43:27.8124,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning' was not found,
+2013-05-24 17:43:27.8124,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven' was not found,
+2013-05-24 17:43:27.8124,Raven.Database.Server.HttpServer,Debug,,Request # 247: GET     -     0 ms - FaceInfo   - 200 - /docs?startsWith=Raven%2FVersioning%2FDefaultConfiguration%2F&start=0&pageSize=15&noCache=690588708,
+2013-05-24 17:43:27.8124,Raven.Database.Server.HttpServer,Debug,,Request # 248: GET     -     1 ms - FaceInfo   - 200 - /queries/?metadata-only=true&&id=Raven/Versioning&id=Raven&noCache=-236264831,
+2013-05-24 17:43:32.7527,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:43:32.7527,Raven.Database.Server.HttpServer,Debug,,Request # 249: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-1469440091,
+2013-05-24 17:43:32.7887,Raven.Database.Server.HttpServer,Debug,,Request # 250: GET     -     5 ms - FaceInfo   - 200 - /docs/?start=0&pageSize=30&noCache=-178508789,
+2013-05-24 17:43:32.7987,Raven.Database.Server.HttpServer,Debug,,Request # 251: GET     -    21 ms - FaceInfo   - 200 - /stats?noCache=206812259,
+2013-05-24 17:43:34.5448,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 17:43:34.5448,Raven.Database.Server.HttpServer,Debug,,Request # 252: GET     -     1 ms - FaceInfo   - 200 - /docs/Raven/Replication/Destinations?noCache=109469878,
+2013-05-24 17:43:34.7588,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication' was not found,
+2013-05-24 17:43:34.7588,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven' was not found,
+2013-05-24 17:43:34.7588,Raven.Database.Server.HttpServer,Debug,,Request # 253: GET     -     1 ms - FaceInfo   - 200 - /docs?startsWith=Raven%2FReplication%2FDestinations%2F&start=0&pageSize=15&noCache=-146445102,
+2013-05-24 17:43:34.7588,Raven.Database.Server.HttpServer,Debug,,Request # 254: GET     -     2 ms - FaceInfo   - 200 - /queries/?metadata-only=true&&id=Raven/Replication&id=Raven&noCache=-973033323,
+2013-05-24 17:44:08.3977,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:44:08.3977,Raven.Database.Server.HttpServer,Debug,,Request # 255: GET     -     2 ms - FaceInfo   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=277647806,
+2013-05-24 17:44:08.4317,Raven.Database.Server.HttpServer,Debug,,Request # 256: GET     -     1 ms - FaceInfo   - 200 - /docs/?start=0&pageSize=30&noCache=-1889816665,
+2013-05-24 17:44:08.4447,Raven.Database.Server.HttpServer,Debug,,Request # 257: GET     -    12 ms - FaceInfo   - 200 - /stats?noCache=911187859,
+2013-05-24 17:44:24.2636,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Encryption/Verification' was found,
+2013-05-24 17:44:24.2636,Raven.Database.Server.HttpServer,Debug,,Request # 258: GET     -     2 ms - FaceInfo   - 200 - /docs/Raven/Encryption/Verification?noCache=-762709102,
+2013-05-24 17:44:24.4216,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Encryption' was not found,
+2013-05-24 17:44:24.4216,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven' was not found,
+2013-05-24 17:44:24.4216,Raven.Database.Server.HttpServer,Debug,,Request # 259: GET     -     1 ms - FaceInfo   - 200 - /docs?startsWith=Raven%2FEncryption%2FVerification%2F&start=0&pageSize=15&noCache=-352412856,
+2013-05-24 17:44:24.4216,Raven.Database.Server.HttpServer,Debug,,Request # 260: GET     -     1 ms - FaceInfo   - 200 - /queries/?metadata-only=true&&id=Raven/Encryption&id=Raven&noCache=716432027,
+2013-05-24 17:44:29.2299,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:44:29.2299,Raven.Database.Server.HttpServer,Debug,,Request # 261: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-598977780,
+2013-05-24 17:44:29.2889,Raven.Database.Server.HttpServer,Debug,,Request # 262: GET     -     2 ms - FaceInfo   - 200 - /docs/?start=0&pageSize=30&noCache=1020569382,
+2013-05-24 17:44:29.3019,Raven.Database.Server.HttpServer,Debug,,Request # 263: GET     -    15 ms - FaceInfo   - 200 - /stats?noCache=-743939203,
+2013-05-24 17:44:30.6230,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning/DefaultConfiguration' was found,
+2013-05-24 17:44:30.6230,Raven.Database.Server.HttpServer,Debug,,Request # 264: GET     -     4 ms - FaceInfo   - 200 - /docs/Raven/Versioning/DefaultConfiguration?noCache=-128673702,
+2013-05-24 17:44:30.8020,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning' was not found,
+2013-05-24 17:44:30.8020,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven' was not found,
+2013-05-24 17:44:30.8020,Raven.Database.Server.HttpServer,Debug,,Request # 265: GET     -     1 ms - FaceInfo   - 200 - /queries/?metadata-only=true&&id=Raven/Versioning&id=Raven&noCache=-776209532,
+2013-05-24 17:44:30.8020,Raven.Database.Server.HttpServer,Debug,,Request # 266: GET     -     2 ms - FaceInfo   - 200 - /docs?startsWith=Raven%2FVersioning%2FDefaultConfiguration%2F&start=0&pageSize=15&noCache=854482116,
+2013-05-24 17:44:34.4362,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:44:34.4362,Raven.Database.Server.HttpServer,Debug,,Request # 267: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-465856809,
+2013-05-24 17:44:34.4832,Raven.Database.Server.HttpServer,Debug,,Request # 268: GET     -     2 ms - FaceInfo   - 200 - /docs/?start=0&pageSize=30&noCache=1416116944,
+2013-05-24 17:44:34.5042,Raven.Database.Server.HttpServer,Debug,,Request # 269: GET     -    24 ms - FaceInfo   - 200 - /stats?noCache=19364026,
+2013-05-24 17:44:36.1023,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 17:44:36.1023,Raven.Database.Server.HttpServer,Debug,,Request # 270: GET     -     0 ms - FaceInfo   - 200 - /docs/Raven/Replication/Destinations?noCache=-406811212,
+2013-05-24 17:44:36.2953,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication' was not found,
+2013-05-24 17:44:36.2953,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven' was not found,
+2013-05-24 17:44:36.2953,Raven.Database.Server.HttpServer,Debug,,Request # 271: GET     -     0 ms - FaceInfo   - 200 - /queries/?metadata-only=true&&id=Raven/Replication&id=Raven&noCache=1481898874,
+2013-05-24 17:44:36.2953,Raven.Database.Server.HttpServer,Debug,,Request # 272: GET     -     1 ms - FaceInfo   - 200 - /docs?startsWith=Raven%2FReplication%2FDestinations%2F&start=0&pageSize=15&noCache=-2147342198,
+2013-05-24 17:44:56.9785,Raven.Database.Indexing.Index.Querying,Debug,,Issuing query on index Raven/DocumentsByExpirationDate for: Expiry:[* TO 2013-05-24T09:44:56.9525488],
+2013-05-24 17:44:59.6907,Raven.Database.Server.HttpServer,Debug,,Request # 273: GET     -     1 ms - FaceInfo   - 200 - /docs/?start=1&pageSize=1&noCache=1413575357,
+2013-05-24 17:44:59.9247,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Versioning' was not found,
+2013-05-24 17:44:59.9247,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven' was not found,
+2013-05-24 17:44:59.9247,Raven.Database.Server.HttpServer,Debug,,Request # 274: GET     -     1 ms - FaceInfo   - 200 - /docs?startsWith=Raven%2FVersioning%2FDefaultConfiguration%2F&start=0&pageSize=15&noCache=901520378,
+2013-05-24 17:44:59.9247,Raven.Database.Server.HttpServer,Debug,,Request # 275: GET     -     1 ms - FaceInfo   - 200 - /queries/?metadata-only=true&&id=Raven/Versioning&id=Raven&noCache=536604259,
+2013-05-24 17:45:02.8508,Raven.Database.Server.HttpServer,Debug,,Request # 276: GET     -     1 ms - FaceInfo   - 200 - /docs/?start=2&pageSize=1&noCache=-1740507307,
+2013-05-24 17:45:03.1249,Raven.Database.Server.HttpServer,Debug,,Request # 277: GET     -     1 ms - FaceInfo   - 200 - /docs?startsWith=Raven%2FEncryption%2FVerification%2F&start=0&pageSize=15&noCache=-886749900,
+2013-05-24 17:45:03.1249,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Encryption' was not found,
+2013-05-24 17:45:03.1249,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven' was not found,
+2013-05-24 17:45:03.1249,Raven.Database.Server.HttpServer,Debug,,Request # 278: GET     -     0 ms - FaceInfo   - 200 - /queries/?metadata-only=true&&id=Raven/Encryption&id=Raven&noCache=1007260253,
+2013-05-24 17:45:06.1870,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Encryption/Verification' was found,
+2013-05-24 17:45:06.1870,Raven.Database.Server.HttpServer,Debug,,Request # 279: GET     -     1 ms - FaceInfo   - 200 - /docs/Raven/Encryption/Verification?noCache=-472364610,
+2013-05-24 17:45:06.2300,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Encryption' was not found,
+2013-05-24 17:45:06.2300,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven' was not found,
+2013-05-24 17:45:06.2300,Raven.Database.Server.HttpServer,Debug,,Request # 280: GET     -     2 ms - FaceInfo   - 200 - /docs?startsWith=Raven%2FEncryption%2FVerification%2F&start=0&pageSize=15&noCache=540392008,
+2013-05-24 17:45:06.2300,Raven.Database.Server.HttpServer,Debug,,Request # 281: GET     -     2 ms - FaceInfo   - 200 - /queries/?metadata-only=true&&id=Raven/Encryption&id=Raven&noCache=1022404616,
+2013-05-24 17:45:08.2661,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:45:08.2661,Raven.Database.Server.HttpServer,Debug,,Request # 282: GET     -     0 ms - FaceInfo   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=637274387,
+2013-05-24 17:45:08.2711,Raven.Database.Server.HttpServer,Debug,,Request # 283: GET     -     6 ms - FaceInfo   - 200 - /terms/Raven/DocumentsByEntityName?field=Tag&fromValue=&pageSize=100&noCache=1646561851,
+2013-05-24 17:45:22.4950,Raven.Database.Server.HttpServer,Debug,,Request # 284: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=4/qAPGj&command=unwatch-docs&noCache=-1303051888,
+2013-05-24 17:45:22.4950,Raven.Database.Server.HttpServer,Debug,,Request # 285: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=4/qAPGj&command=disconnect&noCache=-519742808,
+2013-05-24 17:45:22.5040,Raven.Database.Server.HttpServer,Debug,,Request # 286: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=4/qAPGj&command=unwatch-indexes&noCache=-551346930,
+2013-05-24 17:45:22.5040,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Databases/<system>' was not found,
+2013-05-24 17:45:22.5040,Raven.Database.Server.HttpServer,Debug,,Request # 287: GET     -     1 ms - <system>   - 404 - /docs/Raven/Databases/%3Csystem%3E?noCache=-744687575,
+2013-05-24 17:45:22.5280,Raven.Database.Server.HttpServer,Debug,<system>,Request # 288: GET     -    13 ms - <system>   - 200 - /changes/events?id=5/25lBbI,
+2013-05-24 17:45:22.5440,Raven.Database.Server.HttpServer,Debug,,Request # 289: GET     -     0 ms - <system>   - 200 - /silverlight/ensureStartup?noCache=2086186726,
+2013-05-24 17:45:22.5450,Raven.Database.Server.HttpServer,Debug,,Request # 290: GET     -    36 ms - <system>   - 200 - /stats?noCache=2056501332,
+2013-05-24 17:45:22.5450,Raven.Database.Server.HttpServer,Debug,,Request # 291: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=4/qAPGj&command=disconnect&noCache=1735987867,
+2013-05-24 17:45:22.5450,Raven.Database.Server.HttpServer,Debug,,Request # 292: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=4/qAPGj&command=unwatch-indexes&noCache=-1916606822,
+2013-05-24 17:45:22.5450,Raven.Database.Server.HttpServer,Debug,,Request # 293: GET     -     1 ms - <system>   - 200 - /changes/config?id=5/25lBbI&command=watch-indexes&noCache=-299877352,
+2013-05-24 17:45:22.5450,Raven.Database.Server.HttpServer,Debug,,Request # 294: GET     -     0 ms - <system>   - 200 - /changes/config?id=5/25lBbI&command=watch-docs&noCache=977104992,
+2013-05-24 17:45:22.5640,Raven.Database.Server.HttpServer,Debug,,Request # 295: GET     -     0 ms - <system>   - 200 - /changes/config?id=5/25lBbI&command=watch-docs&noCache=753060175,
+2013-05-24 17:45:22.5950,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:45:22.5950,Raven.Database.Server.HttpServer,Debug,,Request # 296: GET     -     0 ms - <system>   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=-441881267,
+2013-05-24 17:45:22.6510,Raven.Database.Server.HttpServer,Debug,,Request # 297: GET     -     4 ms - <system>   - 200 - /docs/?start=0&pageSize=30&noCache=1242215578,
+2013-05-24 17:45:22.6590,Raven.Database.Server.HttpServer,Debug,,Request # 298: GET     -    13 ms - <system>   - 200 - /stats?noCache=2665883,
+2013-05-24 17:45:26.9842,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 17:45:26.9842,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 1, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:49:56.9567,Raven.Database.Indexing.Index.Querying,Debug,,Issuing query on index Raven/DocumentsByExpirationDate for: Expiry:[* TO 2013-05-24T09:49:56.9547079],
+2013-05-24 17:49:56.9767,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 1, for: Sql Replication, will wait for additional work",
+time,logger,level,database,message,exception
+2013-05-24 17:50:23.6982,Raven.Database.Impl.DocumentCacher,Info,<system>,"MemoryCache Settings:
+  PhysicalMemoryLimit = 99
+  CacheMemoryLimit    = 3205496832
+  PollingInterval     = 00:02:00",
+2013-05-24 17:50:23.7982,Raven.Storage.Esent.TransactionalStorage,Info,<system>,"Esent Settings:
+  MaxVerPages      = 16384
+  CacheSizeMax     = 262144
+  DatabasePageSize = 4096",
+2013-05-24 17:50:27.0224,Raven.Database.Storage.IndexDefinitionStorage,Info,<system>,"New index Raven%2fDocumentsByEntityName:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByEntityName : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByEntityName()
+	{
+		this.ViewText = @""from doc in docs 
+let Tag = doc[""""@metadata""""][""""Raven-Entity-Name""""]
+select new { Tag, LastModified = (DateTime)doc[""""@metadata""""][""""Last-Modified""""] };"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let Tag = doc[""@metadata""][""Raven-Entity-Name""]
+			select new {
+				Tag,
+				LastModified = (DateTime)doc[""@metadata""][""Last-Modified""],
+				__document_id = doc.__document_id
+			});
+		this.AddField(""LastModified"");
+		this.AddField(""__document_id"");
+		this.AddField(""Tag"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+
+Compiled to:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByEntityName : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByEntityName()
+	{
+		this.ViewText = @""from doc in docs 
+let Tag = doc[""""@metadata""""][""""Raven-Entity-Name""""]
+select new { Tag, LastModified = (DateTime)doc[""""@metadata""""][""""Last-Modified""""] };"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let Tag = doc[""@metadata""][""Raven-Entity-Name""]
+			select new {
+				Tag,
+				LastModified = (DateTime)doc[""@metadata""][""Last-Modified""],
+				__document_id = doc.__document_id
+			});
+		this.AddField(""LastModified"");
+		this.AddField(""__document_id"");
+		this.AddField(""Tag"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+",
+2013-05-24 17:50:27.0794,Raven.Database.Indexing.IndexStorage.Startup,Debug,<system>,Loading saved index Raven/DocumentsByEntityName,
+2013-05-24 17:50:27.1454,Raven.Database.Indexing.Index.Indexing,Debug,<system>,Creating index for Raven/DocumentsByEntityName,
+2013-05-24 17:50:28.9835,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Backup/Status' was not found,
+2013-05-24 17:50:29.0685,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 0, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:50:29.0755,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Authorization/WindowsSettings' was not found,
+2013-05-24 17:50:29.0755,Raven.Database.Indexing.WorkContext,Debug,<system>,"No work was found, workerWorkCounter: 0, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:55:22.3103,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Databases/FaceInfo' was found,
+2013-05-24 17:55:22.3103,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Databases/FaceInfo' was found,
+2013-05-24 17:55:22.4123,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Databases/FaceInfo' was found,
+2013-05-24 17:55:22.4123,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Databases/FaceInfo' was found,
+2013-05-24 17:55:22.3933,Raven.Database.Server.HttpServer,Debug,,Request #   1: GET     -   141 ms - <system>   - 200 - /changes/config?id=5/25lBbI&command=unwatch-docs&noCache=-736273194,
+2013-05-24 17:55:22.3933,Raven.Database.Server.HttpServer,Debug,,Request #   2: GET     -   141 ms - <system>   - 200 - /changes/config?id=5/25lBbI&command=disconnect&noCache=794780389,
+2013-05-24 17:55:22.3933,Raven.Database.Server.HttpServer,Debug,,Request #   3: GET     -   148 ms - <system>   - 200 - /changes/config?id=5/25lBbI&command=unwatch-indexes&noCache=-2147461303,
+2013-05-24 17:55:22.4613,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Databases/FaceInfo' was found,
+2013-05-24 17:55:22.6023,Raven.Database.Impl.DocumentCacher,Info,FaceInfo,"MemoryCache Settings:
+  PhysicalMemoryLimit = 99
+  CacheMemoryLimit    = 3205496832
+  PollingInterval     = 00:02:00",
+2013-05-24 17:55:22.6023,Raven.Storage.Esent.TransactionalStorage,Info,FaceInfo,"Esent Settings:
+  MaxVerPages      = 16384
+  CacheSizeMax     = 262144
+  DatabasePageSize = 4096",
+2013-05-24 17:55:22.6023,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,<system>,Document with key 'Raven/Databases/FaceInfo' was found,
+2013-05-24 17:55:22.6523,Raven.Database.Server.HttpServer,Debug,,Request #   4: GET     -   340 ms - <system>   - 200 - /docs/Raven/Databases/FaceInfo?noCache=696578886,
+2013-05-24 17:55:23.1813,Raven.Database.Storage.IndexDefinitionStorage,Info,FaceInfo,"New index Raven%2fDocumentsByEntityName:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByEntityName : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByEntityName()
+	{
+		this.ViewText = @""from doc in docs 
+let Tag = doc[""""@metadata""""][""""Raven-Entity-Name""""]
+select new { Tag, LastModified = (DateTime)doc[""""@metadata""""][""""Last-Modified""""] };"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let Tag = doc[""@metadata""][""Raven-Entity-Name""]
+			select new {
+				Tag,
+				LastModified = (DateTime)doc[""@metadata""][""Last-Modified""],
+				__document_id = doc.__document_id
+			});
+		this.AddField(""LastModified"");
+		this.AddField(""__document_id"");
+		this.AddField(""Tag"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+
+Compiled to:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByEntityName : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByEntityName()
+	{
+		this.ViewText = @""from doc in docs 
+let Tag = doc[""""@metadata""""][""""Raven-Entity-Name""""]
+select new { Tag, LastModified = (DateTime)doc[""""@metadata""""][""""Last-Modified""""] };"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let Tag = doc[""@metadata""][""Raven-Entity-Name""]
+			select new {
+				Tag,
+				LastModified = (DateTime)doc[""@metadata""][""Last-Modified""],
+				__document_id = doc.__document_id
+			});
+		this.AddField(""LastModified"");
+		this.AddField(""__document_id"");
+		this.AddField(""Tag"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+",
+2013-05-24 17:55:23.3243,Raven.Database.Storage.IndexDefinitionStorage,Info,FaceInfo,"New index Raven%2fDocumentsByExpirationDate:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByExpirationDate : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByExpirationDate()
+	{
+		this.ViewText = @""
+	from doc in docs
+	let expiry = doc[""""@metadata""""][""""Raven-Expiration-Date""""]
+	where expiry != null
+	select new { Expiry = expiry }
+"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let expiry = doc[""@metadata""][""Raven-Expiration-Date""]
+			where expiry != null
+			select new {
+				Expiry = expiry,
+				__document_id = doc.__document_id
+			});
+		this.AddField(""Expiry"");
+		this.AddField(""__document_id"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+
+Compiled to:
+using Raven.Abstractions;
+using Raven.Database.Linq;
+using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System;
+using Raven.Database.Linq.PrivateExtensions;
+using Lucene.Net.Documents;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Raven.Database.Indexing;
+
+
+public class Index_Raven_2fDocumentsByExpirationDate : Raven.Database.Linq.AbstractViewGenerator
+{
+	public Index_Raven_2fDocumentsByExpirationDate()
+	{
+		this.ViewText = @""
+	from doc in docs
+	let expiry = doc[""""@metadata""""][""""Raven-Expiration-Date""""]
+	where expiry != null
+	select new { Expiry = expiry }
+"";
+		this.AddMapDefinition(docs => 
+			from doc in docs
+			let expiry = doc[""@metadata""][""Raven-Expiration-Date""]
+			where expiry != null
+			select new {
+				Expiry = expiry,
+				__document_id = doc.__document_id
+			});
+		this.AddField(""Expiry"");
+		this.AddField(""__document_id"");
+		this.AddQueryParameterForMap(""__document_id"");
+		this.AddQueryParameterForReduce(""__document_id"");
+	}
+}
+",
+2013-05-24 17:55:23.3243,Raven.Database.Indexing.IndexStorage.Startup,Debug,,Loading saved index Raven/DocumentsByExpirationDate,
+2013-05-24 17:55:23.3243,Raven.Database.Indexing.IndexStorage.Startup,Debug,,Loading saved index Raven/DocumentsByEntityName,
+2013-05-24 17:55:23.3693,Raven.Database.Indexing.Index.Indexing,Debug,,Creating index for Raven/DocumentsByExpirationDate,
+2013-05-24 17:55:23.3693,Raven.Database.Indexing.Index.Indexing,Debug,,Creating index for Raven/DocumentsByEntityName,
+2013-05-24 17:55:23.3693,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Encryption/Verification' was found,
+2013-05-24 17:55:23.4203,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Backup/Periodic/Setup' was not found,
+2013-05-24 17:55:23.4203,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/Backup/Status' was not found,
+2013-05-24 17:55:23.4203,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,,Document with key 'Raven/SqlReplication/Status' was not found,
+2013-05-24 17:55:23.4313,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 0, for: ReducingExecuter, will wait for additional work",
+2013-05-24 17:55:23.4313,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 0, for: IndexingExecuter, will wait for additional work",
+2013-05-24 17:55:23.4533,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 17:55:23.4633,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 0, for: Sql Replication, will wait for additional work",
+2013-05-24 17:55:23.4633,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 17:55:23.4633,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 0, for: ReplicationTask, will wait for additional work",
+2013-05-24 17:55:23.5213,Raven.Database.Server.HttpServer,Debug,FaceInfo,"Request #   5: GET     - 1,232 ms - FaceInfo   - 200 - /changes/events?id=6/eJBY2",
+2013-05-24 17:55:23.7503,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Studio/PriorityColumns' was not found,
+2013-05-24 17:55:23.7503,Raven.Database.Server.HttpServer,Debug,,"Request #   6: GET     - 1,339 ms - FaceInfo   - 404 - /docs/Raven/Studio/PriorityColumns?noCache=1976081219",
+2013-05-24 17:55:23.7503,Raven.Database.Server.HttpServer,Debug,,Request #   7: GET     -     0 ms - <system>   - 200 - /changes/config?id=5/25lBbI&command=unwatch-indexes&noCache=1020202739,
+2013-05-24 17:55:23.7584,Raven.Database.Server.HttpServer,Debug,,Request #   8: GET     -     0 ms - <system>   - 200 - /changes/config?id=5/25lBbI&command=disconnect&noCache=-1323179993,
+2013-05-24 17:55:23.7584,Raven.Database.Server.HttpServer,Debug,,Request #   9: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=6/eJBY2&command=watch-docs&noCache=1603065648,
+2013-05-24 17:55:23.7584,Raven.Database.Server.HttpServer,Debug,,Request #  10: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=6/eJBY2&command=watch-indexes&noCache=-133449869,
+2013-05-24 17:55:23.8244,Raven.Database.Server.HttpServer,Debug,,"Request #  11: GET     - 1,411 ms - FaceInfo   - 200 - /silverlight/ensureStartup?noCache=-607975669",
+2013-05-24 17:55:23.8244,Raven.Database.Server.HttpServer,Debug,,"Request #  12: GET     - 1,172 ms - FaceInfo   - 200 - /docs/?start=0&pageSize=30&noCache=-864633694",
+2013-05-24 17:55:23.8594,Raven.Database.Server.HttpServer,Debug,,Request #  13: GET     -     0 ms - <system>   - 200 - /changes/config?id=5/25lBbI&command=disconnect&noCache=-1678751072,
+2013-05-24 17:55:23.8754,Raven.Database.Server.HttpServer,Debug,,Request #  14: GET     -     0 ms - FaceInfo   - 200 - /changes/config?id=6/eJBY2&command=watch-indexes&noCache=1083303365,
+2013-05-24 17:55:23.9434,Raven.Database.Server.HttpServer,Debug,,"Request #  15: GET     - 1,483 ms - FaceInfo   - 200 - /stats?noCache=2059697045",
+2013-05-24 17:55:23.9434,Raven.Database.Server.HttpServer,Debug,,"Request #  16: GET     - 1,631 ms - FaceInfo   - 200 - /stats?noCache=1174736829",
+2013-05-24 18:00:23.4725,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 18:00:23.4725,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 0, for: ReplicationTask, will wait for additional work",
+2013-05-24 18:00:23.6965,Raven.Database.Indexing.Index.Querying,Debug,,Issuing query on index Raven/DocumentsByExpirationDate for: Expiry:[* TO 2013-05-24T10:00:23.4305403],
+2013-05-24 18:05:23.4276,Raven.Database.Indexing.Index.Querying,Debug,,Issuing query on index Raven/DocumentsByExpirationDate for: Expiry:[* TO 2013-05-24T10:05:23.4246989],
+2013-05-24 18:05:23.4637,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 0, for: Sql Replication, will wait for additional work",
+2013-05-24 18:05:23.4727,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 18:05:23.4727,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 0, for: ReplicationTask, will wait for additional work",
+2013-05-24 18:10:23.4428,Raven.Database.Indexing.Index.Querying,Debug,,Issuing query on index Raven/DocumentsByExpirationDate for: Expiry:[* TO 2013-05-24T10:10:23.4348585],
+2013-05-24 18:10:23.4618,Raven.Storage.Esent.StorageActions.DocumentStorageActions,Debug,FaceInfo,Document with key 'Raven/Replication/Destinations' was found,
+2013-05-24 18:10:23.4618,Raven.Database.Indexing.WorkContext,Debug,FaceInfo,"No work was found, workerWorkCounter: 0, for: ReplicationTask, will wait for additional work",
+2013-05-24 18:10:29.3561,Raven.Database.Indexing.WorkContext,Debug,,Stopping background workers,

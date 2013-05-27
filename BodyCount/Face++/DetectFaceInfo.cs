@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FaceppSDK;
+using System.Windows;
+using Point = System.Windows.Point;
 
 namespace Face__
 {
@@ -11,11 +13,17 @@ namespace Face__
     {
         private readonly int DepthImageFramePerSecond = 30;
 
-
-        public string Time { get; set; }
-        public FaceppSDK.Attribute FaceAttribute { get; set; }
-        public int TrackingID { get; set; }
-        public int TotalStayTime { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public TimeSpan DwellTime { get; set; }
+        public TimeSpan TotalStayTime  { get; set; }
+        public Point BodyPostion { get; set; }
+        public int Age { get; set; }
+        public int AgeRange { get; set; }
+        public string  Gender { get; set; }
+        public double GenderConfidence { get; set; }
+        public string Race { get; set; }
+        public double RaceConfidence { get; set; }
 
         public DetectFaceInfo()
         {
@@ -24,16 +32,31 @@ namespace Face__
         public DetectFaceInfo(DetectResult detectResult, string path)
         {
             string[] strings = path.Split('_');
+            if (detectResult.face.Count>0)
+            {
+                Face face = detectResult.face.SingleOrDefault();
+                Age = face.attribute.age.value;
+                AgeRange = face.attribute.age.range;
 
-            Time = strings[0];
+                Gender = face.attribute.gender.value;
+                GenderConfidence = face.attribute.gender.confidence;
 
-            TrackingID = Int32.Parse(strings[1]);
+                Race = face.attribute.race.value;
+                RaceConfidence = face.attribute.race.confidence;
+            }
+           // long ticks = long.Parse(strings[0]);
+           // TimeSpan timeSpan=new TimeSpan(ticks);
+           // DateTime CentryBegin = new DateTime(2001,1,1);
+           //// Time  = CentryBegin.Add(timeSpan);
 
-            int temp = Int32.Parse(strings[2]);
-            TotalStayTime = temp/DepthImageFramePerSecond;
+           //// TrackingID = Int32.Parse(strings[1]);
 
-            FaceAttribute = detectResult.face.FirstOrDefault().attribute;
-
+           // int temp = Int32.Parse(strings[2]);
+           //// TotalStayTime = temp/DepthImageFramePerSecond;
+           // if (detectResult.face.Count>0)
+           // {
+           //   // FaceAttribute face = detectResult.face.FirstOrDefault().attribute;
+           // }
         }
     }
 }
